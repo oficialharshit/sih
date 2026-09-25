@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>voxguard | AI Voice Deepfake & Scam Detection</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            cyber: {
+              bg: '#0a0d14',
+              card: '#111726',
+              border: '#1e293b',
+              neon: '#00f2fe',
+              emerald: '#10b981',
+              rose: '#f43f5e',
+              amber: '#f59e0b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      background-color: #080b11;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(0, 242, 254, 0.05) 0%, transparent 40%);
+      min-height: 100vh;
+      color: #f1f5f9;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    
+    .glass-card {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    .glow-rose { box-shadow: 0 0 25px rgba(244, 63, 94, 0.25); }
+    .glow-emerald { box-shadow: 0 0 25px rgba(16, 185, 129, 0.25); }
+    .glow-amber { box-shadow: 0 0 25px rgba(245, 158, 11, 0.25); }
+
+    .pulse-record {
+      animation: pulse-red 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse-red {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.6); }
+      50% { box-shadow: 0 0 0 12px rgba(244, 63, 94, 0); }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+<body class="antialiased selection:bg-indigo-500 selection:text-white pb-16">
+
+  <!-- Navigation Bar -->
+  <header class="border-b border-slate-800/80 sticky top-0 z-50 bg-[#080b11]/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20 text-white font-bold">
+          🛡️
+        </div>
+        <div>
+          <span class="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-indigo-200">Vox<span class="text-indigo-400">Guard</span></span>
+          <span class="ml-2 px-2 py-0.5 text-[10px] font-mono uppercase bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded">v2.0 PRO</span>
+        </div>
+      </div>
+
+      <!-- System Telemetry Badge -->
+      <div class="flex items-center space-x-4">
+        <div id="system-status-badge" class="flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="device-info">API Ready</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+
+    <!-- Hero Header -->
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-800/50 text-indigo-300 text-xs font-medium mb-4">
+        <span>⚡ Multimodal AI Voice Cloning & NLP Fraud Detection</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
+        AI Voice Deepfake & <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400">Scam Detection</span>
+      </h1>
+      <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
+        Analyze voice recordings in real-time to detect synthetic speech clones, transcribe conversations via Whisper, and inspect NLP scam patterns with fine-tuned DistilBERT.
+      </p>
+    </div>
+
+    <!-- Main Workspace Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- LEFT COLUMN: Input & Upload Panel (5 cols) -->
+      <div class="lg:col-span-5 space-y-6">
+        <div class="glass-card rounded-2xl p-6 shadow-xl border border-slate-800">
+          
+          <!-- Mode Tabs (Omni-Channel Ingress) -->
+          <div class="grid grid-cols-4 p-1 bg-slate-900 rounded-xl border border-slate-800 mb-6 gap-1">
+            <button type="button" id="tab-btn-upload" class="py-2 text-[11px] font-semibold rounded-lg flex items-center justify-center space-x-1.5 transition-all bg-indigo-600 text-white shadow cursor-pointer">
+              <span>📁 Upload</span>
+            </button>
+            <button type="button" id="tab-btn-record" class="py-2 text-[11px] font-semibold rounded-lg flex items-center justify-center space-x-1.5 transition-all text-slate-400 hover:text-slate-200 cursor-pointer">
+              <span>🎤 Live Mic</span>
+            </button>
+            <button type="button" id="tab-btn-sample" class="py-2 text-[11px] font-semibold rounded-lg flex items-center justify-center space-x-1.5 transition-all text-slate-400 hover:text-slate-200 cursor-pointer">
+              <span>🎵 Sample</span>
+            </button>
+            <button type="button" id="tab-btn-telephony" class="py-2 text-[11px] font-semibold rounded-lg flex items-center justify-center space-x-1.5 transition-all text-slate-400 hover:text-cyan-300 border border-transparent hover:border-cyan-500/30 cursor-pointer">
+              <span>📞 Telephony</span>
+            </button>
+          </div>
+
+          <!-- TAB 1: File Upload -->
+          <div id="tab-panel-upload" class="space-y-4">
+            <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-xl p-8 text-center cursor-pointer transition-all bg-slate-900/40 hover:bg-slate-900/80">
+              <input type="file" id="audio-file-input" class="hidden" accept="audio/*,.wav,.mp3,.flac,.m4a,.ogg,.webm">
+              <div class="w-14 h-14 mx-auto rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-3 text-2xl">
+                ☁️
+              </div>
+              <p class="text-sm font-medium text-slate-200">Drag & drop your audio file here</p>
+              <p class="text-xs text-slate-400 mt-1">Supports WAV, MP3, FLAC, M4A, OGG, WEBM</p>
+              <button type="button" id="browse-btn" class="mt-4 px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition">
+                Browse Files
+              </button>
+            </div>
+          </div>
+
+          <!-- TAB 2: Live Recording -->
+          <div id="tab-panel-record" class="space-y-4 hidden">
+            <div class="p-6 bg-slate-900/60 rounded-xl border border-slate-800 text-center">
+              
+              <!-- Visualizer Canvas -->
+              <div class="h-24 bg-slate-950 rounded-lg mb-4 flex items-center justify-center border border-slate-800 overflow-hidden relative">
+                <canvas id="mic-canvas" width="400" height="96" class="w-full h-full"></canvas>
+                <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center text-xs text-slate-400 font-mono">
+                  Microphone idle
+                </div>
+              </div>
+
+              <!-- Timer -->
+              <div id="recording-timer" class="text-2xl font-mono font-bold text-slate-300 mb-4">00:00</div>
+
+              <!-- Record Buttons -->
+              <div class="flex justify-center space-x-3">
+                <button type="button" id="record-btn" class="px-6 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold flex items-center space-x-2 shadow-lg shadow-rose-600/30 transition cursor-pointer">
+                  <span>⏺️</span>
+                  <span id="record-btn-text">Start Recording</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: Demo Samples -->
+          <div id="tab-panel-sample" class="space-y-4 hidden">
+            <p class="text-xs text-slate-400">Select a pre-loaded test audio file to test the AI models immediately:</p>
+            <div id="sample-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+              <div id="demo-sample-btn" class="p-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-indigo-500 rounded-lg flex items-center justify-between cursor-pointer transition">
+                <div class="flex items-center space-x-3">
+                  <span class="text-lg">🔊</span>
+                  <div>
+                    <p class="text-xs font-medium text-slate-200">Sample Demo Voice (sample.wav)</p>
+                    <p class="text-[10px] text-slate-400">Voice cloning test clip</p>
+                  </div>
+                </div>
+                <span class="text-xs text-indigo-400 font-mono font-semibold bg-indigo-500/10 px-2 py-1 rounded border border-indigo-500/20">Select</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: Enterprise Telephony & Omni-Channel PBX Ingress -->
+          <div id="tab-panel-telephony" class="space-y-4 hidden">
+            <!-- Ingress Environment Selector -->
+            <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-semibold text-cyan-300 flex items-center space-x-1">
+                  <span>📡 Telephony Ingress Channel</span>
+                </span>
+                <span id="telephony-trunk-status" class="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">TRUNK ACTIVE</span>
+              </div>
+              <select id="telephony-env-select" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500 cursor-pointer">
+                <option value="sip" selected>📞 Enterprise SIP / PBX Softphone (Trunk)</option>
+                <option value="contact_center">🏢 Contact Center Fork (Genesys / Avaya / Twilio)</option>
+                <option value="zoom">👥 Collaboration Platform (Zoom / Teams Meeting)</option>
+                <option value="gsm_phone">📱 GSM Mobile Carrier Number (+91 Cloud Webhook)</option>
+                <option value="stream">📻 Live Audio Stream / RTSP Stream</option>
+              </select>
+            </div>
+
+            <!-- Pre-loaded Scenarios Dropdown -->
+            <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-semibold text-slate-300">⚡ Attack Scenario Pre-set</span>
+                <span class="text-[9px] font-mono text-slate-500">RFC 3261</span>
+              </div>
+              <select id="telephony-scenario-select" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer">
+                <option value="ceo_impersonation_scam">🚨 CEO Rajesh Sharma Spoofing (Ext: 4001 - RTGS)</option>
+                <option value="cfo_vendor_payment">🚨 CFO Priya Nair Spoofing (Ext: 4005 - Invoice)</option>
+                <option value="contact_center_otp_fraud">🏢 Contact Center Impersonation (IVR Bypass)</option>
+                <option value="zoom_executive_conference">👥 Zoom Executive Boardroom (AI Filter Attack)</option>
+              </select>
+            </div>
+
+            <!-- Softphone Interface Card -->
+            <div id="softphone-card" class="p-4 rounded-xl bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 text-center space-y-3 shadow-inner">
+              <div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
+                <span class="flex items-center space-x-1.5">
+                  <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                  <span id="softphone-status">INCOMING SIP CALL</span>
+                </span>
+                <span id="softphone-extension" class="text-cyan-400 font-bold">EXT: 4001</span>
+              </div>
+
+              <!-- Caller Badge -->
+              <div class="py-2 px-3 bg-slate-900/80 rounded-lg border border-slate-800/80">
+                <p id="softphone-caller-name" class="text-sm font-bold text-white tracking-wide">Rajesh Sharma (CEO)</p>
+                <p id="softphone-caller-sub" class="text-[10px] text-slate-400 font-mono">sip:rajesh.sharma@hdfc-vault.internal</p>
+                <div class="mt-1 flex items-center justify-center space-x-2 text-[9px] font-mono text-cyan-300/80">
+                  <span>TRUNK: AVAYA-AURA-HQ-01</span>
+                  <span>•</span>
+                  <span>CODEC: G.711 PCMU (8kHz)</span>
+                </div>
+              </div>
+
+              <!-- Call Action Buttons -->
+              <div class="flex items-center justify-center space-x-3 pt-1">
+                <button type="button" id="softphone-answer-btn" class="flex-1 py-2.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-emerald-600/30 transition cursor-pointer">
+                  <span>📞 Accept & Intercept</span>
+                </button>
+                <button type="button" id="softphone-reject-btn" class="py-2.5 px-3 rounded-lg bg-rose-600/80 hover:bg-rose-600 text-white font-semibold text-xs flex items-center justify-center space-x-1 transition cursor-pointer">
+                  <span>❌ Decline</span>
+                </button>
+              </div>
+
+              <!-- Real Phone Carrier Instructions -->
+              <div id="gsm-carrier-box" class="text-left p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-[10px] text-slate-400 hidden">
+                <p class="font-semibold text-slate-300 mb-1">📱 Connect Physical Mobile Call (Twilio / GSM):</p>
+                <p>1. Run: <code class="text-cyan-400 font-mono">ngrok http 8000</code></p>
+                <p>2. Set Twilio webhook to: <code class="text-indigo-400 font-mono">https://&lt;subdomain&gt;.ngrok-free.app/api/telephony/twiml</code></p>
+                <p>3. Dial the number from your phone to stream live audio directly into this console.</p>
+              </div>
+            </div>
+
+            <!-- SIP Protocol Packet Inspector (Toggleable) -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                <span>RFC 3261 SIP PACKET INSPECTOR</span>
+                <button type="button" id="toggle-sip-packet-btn" class="text-cyan-400 hover:underline">Show Headers</button>
+              </div>
+              <pre id="sip-packet-display" class="hidden text-[9px] font-mono p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-emerald-400/90 overflow-x-auto max-h-36"></pre>
+            </div>
+          </div>
+
+
+          <!-- Audio Preview & Metadata Card -->
+          <div id="selected-audio-preview" class="mt-4 p-4 bg-slate-900 rounded-xl border border-slate-800 hidden space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2 truncate">
+                <span class="text-indigo-400">🔊</span>
+                <span id="preview-filename" class="text-xs font-mono text-slate-200 truncate">audio_file.wav</span>
+              </div>
+              <button type="button" id="clear-audio-btn" class="text-slate-400 hover:text-rose-400 transition font-bold px-2 py-0.5">
+                ✕
+              </button>
+            </div>
+            
+            <audio id="audio-player" controls class="w-full h-9 rounded"></audio>
+          </div>
+
+          <!-- Claimed Caller Identity Selector (CXO Verification) -->
+          <div class="mt-4 p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="text-[11px] font-semibold text-slate-300 flex items-center space-x-1.5">
+                <span>👤 Caller Identity Resolution</span>
+              </label>
+              <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">ZERO-CLICK AUTO</span>
+            </div>
+            <select id="claimed-identity-select" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer">
+              <option value="auto" selected>⚡ Auto-Detect (Caller ID / Spoken Intro)</option>
+              <option value="">None (Generic Deepfake Check Only)</option>
+              <option value="ceo_rajesh_sharma">🔒 Manual Override: Rajesh Sharma (CEO)</option>
+              <option value="cfo_priya_nair">🔒 Manual Override: Priya Nair (CFO)</option>
+            </select>
+            <p class="text-[10px] text-slate-500 italic leading-snug">
+              In real enterprise PBX calls, caller identity is auto-bound via SIP headers or spoken intro ("This is Rajesh...").
+            </p>
+          </div>
+
+          <!-- Language & Dialect Priority Selector -->
+          <div class="mt-3 p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="text-[11px] font-semibold text-slate-300 flex items-center space-x-1.5">
+                <span>🌐 Speech Transcription Language Priority</span>
+              </label>
+              <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">WHISPER SMALL</span>
+            </div>
+            <select id="transcribe-language-select" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer">
+              <option value="auto" selected>🌐 Auto-Detect (Mixed Code-Switching)</option>
+              <option value="hi">🇮🇳 Hindi / Hinglish (Colloquial & Dialect Priority)</option>
+              <option value="en">🇬🇧 English Only</option>
+            </select>
+            <p class="text-[10px] text-slate-500 italic leading-snug">
+              Selecting Hindi / Hinglish primes Whisper with Indic phonetics to accurately catch colloquial scam phrases.
+            </p>
+          </div>
+
+          <!-- Analyze Action Button -->
+          <div class="pt-2">
+            <button type="button" id="analyze-btn" disabled class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold text-sm flex items-center justify-center space-x-2 shadow-lg shadow-indigo-600/25 transition-all cursor-pointer">
+              <span>🔍</span>
+              <span id="analyze-btn-text">Analyze Voice & Scam Patterns</span>
+            </button>
+          </div>
+
+          <!-- Analysis Loading State -->
+          <div id="loading-state" class="hidden mt-4 p-4 bg-indigo-950/40 border border-indigo-900/50 rounded-xl space-y-3">
+            <div class="flex items-center space-x-3 text-indigo-300 text-xs font-mono">
+              <div class="w-4 h-4 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin"></div>
+              <span id="loading-step-text">Initializing AI models...</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+              <div id="loading-bar" class="bg-indigo-500 h-1.5 rounded-full transition-all duration-300 w-1/4"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Quick Summary Metrics / Instructions Card -->
+        <div class="glass-card rounded-2xl p-5 border border-slate-800 text-xs text-slate-400 space-y-2">
+          <div class="flex items-center space-x-2 text-slate-200 font-semibold mb-1">
+            <span>ℹ️ Inspection Breakdown Formula</span>
+          </div>
+          <p>• <strong>Voice Authenticity (70% weight):</strong> Wav2Vec2 + DSP Vocoder Leakage & Prosodic Pitch Jitter/Shimmer.</p>
+          <p>• <strong>Fraud NLP Pattern (30% weight):</strong> Whisper transcription mapped to DistilBERT scam classification.</p>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Real-time Analysis Results (7 cols) -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- Welcome Placeholder State (Before Analysis) -->
+        <div id="placeholder-state" class="glass-card rounded-2xl p-12 text-center border border-slate-800 shadow-xl space-y-4">
+          <div class="w-16 h-16 mx-auto rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-3xl">
+            🎙️
+          </div>
+          <h3 class="text-lg font-bold text-slate-200">Awaiting Audio Input</h3>
+          <p class="text-xs text-slate-400 max-w-sm mx-auto">
+            Upload an audio sample, record using your microphone, or choose a demo audio clip to generate a complete forensic risk report.
+          </p>
+        </div>
+
+        <!-- REAL-TIME IN-CALL LIVE MONITOR (Active during mic streaming) -->
+        <div id="live-stream-card" class="glass-card rounded-2xl p-6 border border-indigo-500/30 shadow-2xl space-y-4 hidden transition-all glow-indigo">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-3">
+              <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+              </span>
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-200">🔴 Live In-Call Voice Monitor (WebSockets)</span>
+            </div>
+            <span id="live-threat-badge" class="px-2.5 py-1 rounded text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              MONITORING STREAM
+            </span>
+          </div>
+
+          <!-- Gauge & Status -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+            <div class="sm:col-span-2 space-y-2">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-400">Rolling Window Threat Gauge (Last 10s)</span>
+                <span id="live-gauge-text" class="font-mono font-bold text-emerald-400">0% RISK</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-3 overflow-hidden p-0.5 border border-slate-800">
+                <div id="live-gauge-bar" class="h-2 rounded-full bg-emerald-500 transition-all duration-300" style="width: 0%"></div>
+              </div>
+              <div id="live-status-message" class="text-[11px] text-slate-400 font-mono">
+                Listening to audio stream... accumulating rolling baseline.
+              </div>
+            </div>
+
+            <!-- Rolling Chunk Badges -->
+            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+              <div class="text-[10px] text-slate-400 uppercase font-mono mb-1.5">Active Chunks</div>
+              <div id="live-chunks-strip" class="flex space-x-1.5 overflow-hidden">
+                <span class="text-[10px] text-slate-600 italic">No chunks yet</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESULTS CONTAINER (Revealed after analysis) -->
+        <div id="results-container" class="hidden space-y-6">
+
+          <!-- 1. Top Verdict Banner -->
+          <div id="verdict-banner" class="glass-card rounded-2xl p-6 border shadow-2xl transition-all">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div class="flex items-center space-x-4">
+                <div id="verdict-icon-container" class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  🛡️
+                </div>
+                <div>
+                  <div class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Overall Diagnostic Verdict</div>
+                  <h2 id="verdict-title" class="text-2xl font-extrabold tracking-tight">LOW RISK</h2>
+                  <p id="verdict-subtitle" class="text-xs text-slate-400 mt-0.5">Voice is classified as authentic human with low scam indicators.</p>
+                </div>
+              </div>
+
+              <!-- Final Risk Score Meter -->
+              <div class="text-right bg-slate-900 px-4 py-2.5 rounded-xl border border-slate-800 min-w-[130px]">
+                <div class="text-[10px] font-mono uppercase text-slate-400">Risk Score</div>
+                <div id="final-risk-score" class="text-2xl font-mono font-extrabold text-indigo-400">0.0%</div>
+              </div>
+            </div>
+
+            <!-- Composite Progress Bar -->
+            <div class="mt-5 space-y-1.5">
+              <div class="flex justify-between text-[11px] font-mono text-slate-400">
+                <span>Composite Threat Index</span>
+                <span id="final-risk-percent">0%</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden p-0.5 border border-slate-800">
+                <div id="risk-score-bar" class="h-1.5 rounded-full transition-all duration-700 bg-emerald-500" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1b. Biometric Speaker Identity Verification Card (CXO / Whaling Defense) -->
+          <div id="identity-verification-card" class="glass-card rounded-2xl p-5 border border-slate-800 space-y-3 hidden transition-all">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div class="flex items-center space-x-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-200">👤 Biometric Speaker Identity Verification</span>
+                <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">TARGET 2FA</span>
+              </div>
+              <span id="identity-verdict-badge" class="px-2.5 py-1 rounded text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                VERIFIED
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <div class="text-[11px] text-slate-400">Claimed Executive Profile</div>
+                <div id="identity-claimed-name" class="text-sm font-bold text-slate-200 mt-0.5">Rajesh Sharma</div>
+                <div id="identity-role-label" class="text-[10px] text-indigo-400 font-mono">Chief Executive Officer</div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs mb-1.5">
+                  <span class="text-slate-400">Vocal Tract Biometric Match</span>
+                  <span id="identity-match-text" class="font-mono font-bold text-emerald-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                  <div id="identity-match-bar" class="h-2 rounded-full bg-emerald-500 transition-all duration-700" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="identity-verdict-message" class="text-[11px] p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 font-mono">
+              Comparing acoustic vocal tract resonances against registered voiceprint...
+            </div>
+          </div>
+
+          <!-- 1c. Enterprise Automated Defense Action Center (Adaptive Defense Intercept) -->
+          <div id="banking-defense-card" class="glass-card rounded-2xl p-5 border border-slate-800 space-y-4 transition-all">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div class="flex items-center space-x-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-200">🛡️ Enterprise Autonomous Defense Layer</span>
+                <span id="defense-tier-badge" class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">ZERO-TRUST TELEPHONY DEFENSE</span>
+              </div>
+              <span id="defense-status-badge" class="px-2.5 py-1 rounded text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                STANDBY / MONITORING
+              </span>
+            </div>
+
+            <!-- Transaction Details & Freeze State (Shown only when financial/banking extortion is detected) -->
+            <div id="defense-banking-grid" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-1">
+                <span class="text-[10px] font-mono text-slate-400 uppercase">Intercepted Transaction</span>
+                <div id="defense-txn-id" class="font-mono font-bold text-slate-200">TXN-88492041</div>
+                <div class="text-[10px] text-slate-400">Source: <span class="font-mono text-slate-300">A/C-9928104812</span></div>
+              </div>
+
+              <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-1">
+                <span class="text-[10px] font-mono text-slate-400 uppercase">Transfer Value</span>
+                <div class="font-mono font-extrabold text-amber-400 text-sm">₹25,00,000.00</div>
+                <div class="text-[10px] text-slate-400">Beneficiary: <span class="font-mono text-rose-400">fraud_mule@okaxis</span></div>
+              </div>
+
+              <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-1">
+                <span class="text-[10px] font-mono text-slate-400 uppercase">Audit Defense Hash</span>
+                <div id="defense-audit-hash" class="font-mono text-[10px] text-cyan-400 truncate">SHA256-PENDING</div>
+                <div class="text-[10px] text-slate-400">Speed: <span class="font-mono text-emerald-400">&lt; 8ms Intercept</span></div>
+              </div>
+            </div>
+
+            <!-- Dynamic Action Message -->
+            <div id="defense-action-message" class="text-xs p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 font-sans leading-relaxed">
+              Autonomous defense engine actively monitoring fund movement against caller biometric and coercion triggers.
+            </div>
+
+            <!-- Countermeasures List -->
+            <div id="defense-countermeasures-container" class="hidden space-y-2 pt-1 border-t border-slate-800/80">
+              <div class="text-[10px] uppercase font-mono text-slate-400">Automated Core Banking Countermeasures Executed:</div>
+              <ul id="defense-countermeasures-list" class="space-y-1 text-xs text-rose-300 font-mono">
+              </ul>
+            </div>
+          </div>
+
+          <!-- 2. Dual Deepfake vs Scam Metrics Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <!-- Card A: Voice Cloning Authenticity -->
+            <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-slate-200">🎙️ Voice Authenticity</span>
+                </div>
+                <span id="voice-label-badge" class="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  REAL
+                </span>
+              </div>
+
+              <!-- Human Prob -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-400">Human Voice Likelihood</span>
+                  <span id="human-prob-text" class="font-mono font-bold text-emerald-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                  <div id="human-prob-bar" class="h-2 rounded-full bg-emerald-500 transition-all duration-700" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- AI Clone Prob -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-400">AI Synthetic Clone Likelihood</span>
+                  <span id="fake-prob-text" class="font-mono font-bold text-rose-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                  <div id="fake-prob-bar" class="h-2 rounded-full bg-rose-500 transition-all duration-700" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card B: NLP Scam Classification -->
+            <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-slate-200">⚠️ Scam Pattern NLP</span>
+                </div>
+                <span id="scam-label-badge" class="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  NON-SCAM
+                </span>
+              </div>
+
+              <!-- Non-Scam Prob -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-400">Legitimate Conversation</span>
+                  <span id="non-scam-prob-text" class="font-mono font-bold text-emerald-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                  <div id="non-scam-prob-bar" class="h-2 rounded-full bg-emerald-500 transition-all duration-700" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Scam Prob -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-400">Fraud / Scam Probability</span>
+                  <span id="scam-prob-text" class="font-mono font-bold text-amber-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                  <div id="scam-prob-bar" class="h-2 rounded-full bg-amber-500 transition-all duration-700" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Indic Dialect & Fraud Category Badge -->
+              <div id="fraud-category-badge-container" class="hidden pt-1">
+                <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between text-[11px] font-mono">
+                  <span class="text-slate-400">Category:</span>
+                  <span id="fraud-category-text" class="font-bold text-amber-400">DIGITAL ARREST</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 3. Whisper Speech-To-Text Transcript Card -->
+          <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-200">📝 Speech-To-Text Transcript (Whisper)</span>
+              </div>
+              <button type="button" id="copy-transcript-btn" class="text-xs text-slate-400 hover:text-slate-200 flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-900 border border-slate-800 transition">
+                <span id="copy-btn-text">Copy</span>
+              </button>
+            </div>
+            
+            <div id="transcript-box" class="p-4 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-300 font-sans leading-relaxed min-h-[70px] select-text">
+              No speech detected.
+            </div>
+          </div>
+
+          <!-- 🔬 3b. NEW: Forensic Biomechanics & DSP Analysis Panel (XAI) -->
+          <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">🔬 Forensic Biomechanics & DSP Analysis</span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-mono">XAI ENGINE</span>
+              </div>
+              <div id="forensic-anomaly-flag" class="text-[11px] font-mono px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-400">
+                Awaiting Audio
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <!-- Pitch Jitter -->
+              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
+                <div class="text-[11px] text-slate-400">Pitch Jitter (F0)</div>
+                <div id="forensic-jitter" class="text-lg font-mono font-bold text-slate-200 mt-1">--</div>
+                <div class="text-[10px] text-slate-500">Human norm: &gt;0.010</div>
+              </div>
+
+              <!-- Shimmer -->
+              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
+                <div class="text-[11px] text-slate-400">Amplitude Shimmer</div>
+                <div id="forensic-shimmer" class="text-lg font-mono font-bold text-slate-200 mt-1">--</div>
+                <div class="text-[10px] text-slate-500">Human norm: &gt;0.015</div>
+              </div>
+
+              <!-- Vocoder HF Leakage -->
+              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
+                <div class="text-[11px] text-slate-400">HF Energy Leakage</div>
+                <div id="forensic-hf" class="text-lg font-mono font-bold text-slate-200 mt-1">--</div>
+                <div class="text-[10px] text-slate-500">Vocoder band &gt;4kHz</div>
+              </div>
+
+              <!-- Speech Rhythm -->
+              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
+                <div class="text-[11px] text-slate-400">Speech Rhythm</div>
+                <div id="forensic-rhythm" class="text-lg font-mono font-bold text-slate-200 mt-1">--</div>
+                <div class="text-[10px] text-slate-500">Voiced cadence ratio</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Forensic Telemetry & Audio Chunk Timeline -->
+          <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-200">Analysis Metadata</span>
+              <div class="flex items-center space-x-3 text-[11px] font-mono text-slate-400">
+                <span>Duration: <strong id="meta-duration" class="text-slate-200">0s</strong></span>
+                <span>Chunks: <strong id="meta-chunks" class="text-slate-200">0</strong></span>
+              </div>
+            </div>
+
+            <!-- Chunk Timeline Visualizer -->
+            <div id="chunks-timeline-container" class="space-y-2">
+              <div class="text-[11px] text-slate-400">Segment Confidence Breakdown (2-Second Windows):</div>
+              <div id="chunks-timeline" class="grid grid-cols-5 gap-2">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Export Actions -->
+          <div class="flex flex-wrap gap-3 justify-end pt-2">
+            <button type="button" id="download-report-btn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center space-x-2 border border-slate-700 transition cursor-pointer">
+              <span>📥 Download JSON Report</span>
+            </button>
+            <button type="button" id="reset-btn" class="px-4 py-2 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 text-xs font-semibold flex items-center space-x-2 border border-indigo-500/30 transition cursor-pointer">
+              <span>🔄 Analyze Another Audio</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Architecture & Model Specifications Section -->
+    <section id="about-section" class="mt-16 pt-12 border-t border-slate-800">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <h2 class="text-xl font-bold text-white">Multi-Stage Forensic AI Architecture</h2>
+        <p class="text-xs text-slate-400 mt-1">Engineered for low latency and high detection accuracy.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-slate-200">1. Audio Preprocessing & VAD</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Resamples input to 16kHz, performs Voice Activity Detection (VAD) to filter background silence, and divides active speech into uniform temporal chunks.
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-slate-200">2. Deepfake Voice Classifier</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Applies a fine-tuned Wav2Vec2 transformer to inspect raw acoustic spectrograms for unnatural phase artifacts common in synthetic speech synthesis.
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-slate-200">3. Whisper & DistilBERT NLP</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Transcribes spoken audio with Whisper-Small and passes lexical content into a custom DistilBERT classifier trained on social engineering and financial scam prompts.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Complete, Standalone, Self-Contained JavaScript Logic -->
+  <script>
+    // Global State
+    var currentAudioFile = null;
+    var isRecording = false;
+    var mediaRecorder = null;
+    var recordedChunks = [];
+    var recordTimerInterval = null;
+    var recordSeconds = 0;
+    var audioContext = null;
+    var analyser = null;
+    var visualizerAnimationId = null;
+    var currentStream = null;
+    var lastAnalysisData = null;
+    var liveWebSocket = null;
+    var audioStreamNode = null;
+
+    // DOM Ready Initializer
+    window.addEventListener('DOMContentLoaded', function() {
+      console.log('voxguard Frontend initialized.');
+      initEventListeners();
+      checkApiHealth();
+      loadEnrolledIdentities();
+    });
+
+    function initEventListeners() {
+      // 1. Tab buttons
+      var tabUpload = document.getElementById('tab-btn-upload');
+      var tabRecord = document.getElementById('tab-btn-record');
+      var tabSample = document.getElementById('tab-btn-sample');
+      var tabTelephony = document.getElementById('tab-btn-telephony');
+
+      if (tabUpload) tabUpload.addEventListener('click', function() { switchTab('upload'); });
+      if (tabRecord) tabRecord.addEventListener('click', function() { switchTab('record'); });
+      if (tabSample) tabSample.addEventListener('click', function() { switchTab('sample'); });
+      if (tabTelephony) tabTelephony.addEventListener('click', function() { switchTab('telephony'); });
+
+      // Telephony Controls
+      initTelephonyControls();
+
+      // 2. Drop Zone & Browse
+      var dropZone = document.getElementById('drop-zone');
+      var fileInput = document.getElementById('audio-file-input');
+      var browseBtn = document.getElementById('browse-btn');
+
+      if (dropZone) {
+        dropZone.addEventListener('click', function() { if (fileInput) fileInput.click(); });
+      }
+      if (browseBtn) {
+        browseBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (fileInput) fileInput.click();
+        });
+      }
+      if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+          if (e.target.files && e.target.files.length > 0) {
+            setAudioFile(e.target.files[0]);
+          }
+        });
+      }
+
+      // Drag and drop events
+      if (dropZone) {
+        ['dragenter', 'dragover'].forEach(function(evt) {
+          dropZone.addEventListener(evt, function(e) {
+            e.preventDefault();
+            dropZone.classList.add('border-indigo-500', 'bg-indigo-950/20');
+          });
+        });
+        ['dragleave', 'drop'].forEach(function(evt) {
+          dropZone.addEventListener(evt, function(e) {
+            e.preventDefault();
+            dropZone.classList.remove('border-indigo-500', 'bg-indigo-950/20');
+          });
+        });
+        dropZone.addEventListener('drop', function(e) {
+          if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+            setAudioFile(e.dataTransfer.files[0]);
+          }
+        });
+      }
+
+      // 3. Demo Sample Button
+      var demoSampleBtn = document.getElementById('demo-sample-btn');
+      if (demoSampleBtn) {
+        demoSampleBtn.addEventListener('click', function() {
+          loadSample('sample.wav');
+        });
+      }
+
+      // 4. Record Button
+      var recordBtn = document.getElementById('record-btn');
+      if (recordBtn) {
+        recordBtn.addEventListener('click', toggleRecording);
+      }
+
+      // 5. Analyze Button
+      var analyzeBtn = document.getElementById('analyze-btn');
+      if (analyzeBtn) {
+        analyzeBtn.addEventListener('click', runAnalysis);
+      }
+
+      // 6. Clear / Reset Buttons
+      var clearBtn = document.getElementById('clear-audio-btn');
+      if (clearBtn) clearBtn.addEventListener('click', clearSelectedAudio);
+
+      var resetBtn = document.getElementById('reset-btn');
+      if (resetBtn) resetBtn.addEventListener('click', clearSelectedAudio);
+
+      // 7. Copy & Download Buttons
+      var copyBtn = document.getElementById('copy-transcript-btn');
+      if (copyBtn) copyBtn.addEventListener('click', copyTranscript);
+
+      var downloadBtn = document.getElementById('download-report-btn');
+      if (downloadBtn) downloadBtn.addEventListener('click', downloadReport);
+    }
+
+    // Health Check
+    function checkApiHealth() {
+      var badge = document.getElementById('device-info');
+      fetch('/api/health')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (badge) badge.textContent = data.device.toUpperCase() + ' (' + data.gpu_name + ')';
+        })
+        .catch(function() {
+          if (badge) {
+            badge.textContent = 'Server Connected';
+          }
+        });
+    }
+
+    // Load Enrolled Executive Identities for Biometric Matching
+    function loadEnrolledIdentities() {
+      var select = document.getElementById('claimed-identity-select');
+      if (!select) return;
+      fetch('/api/identities')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data && data.identities && data.identities.length > 0) {
+            select.innerHTML = '<option value="auto" selected>⚡ Auto-Detect (Caller ID / Spoken Intro)</option>' +
+                               '<option value="">None (Generic Deepfake Check Only)</option>';
+            data.identities.forEach(function(id) {
+              var opt = document.createElement('option');
+              opt.value = id.id;
+              opt.textContent = '🔒 Manual Override: ' + id.name + ' (' + id.role + ')';
+              select.appendChild(opt);
+            });
+          }
+        })
+        .catch(function(err) {
+          console.warn('Could not load identities:', err);
+        });
+    }
+
+    // Switch Tabs
+    function switchTab(tab) {
+      var tabs = ['upload', 'record', 'sample', 'telephony'];
+      tabs.forEach(function(t) {
+        var btn = document.getElementById('tab-btn-' + t);
+        var panel = document.getElementById('tab-panel-' + t);
+        if (t === tab) {
+          if (btn) {
+            btn.className = (t === 'telephony')
+              ? 'py-2 text-[11px] font-semibold rounded-lg flex items-center justify-center space-x-1.5 transition-all bg-gradient-to-r from-cyan-600 to-indigo-600 text-white shadow cursor-pointer'
+              : 'py-2 text-[11px] font-semibold rounded-lg flex items-center justify-center space-x-1.5 transition-all bg-indigo-600 text-white shadow cursor-pointer';
+          }
+          if (panel) panel.classList.remove('hidden');
+        } else {
+          if (btn) btn.className = 'py-2 text-[11px] font-semibold rounded-lg flex items-center justify-center space-x-1.5 transition-all text-slate-400 hover:text-slate-200 cursor-pointer';
+          if (panel) panel.classList.add('hidden');
+        }
+      });
+    }
+
+    // Set Audio File
+    function setAudioFile(file) {
+      currentAudioFile = file;
+      var previewCard = document.getElementById('selected-audio-preview');
+      var filenameLabel = document.getElementById('preview-filename');
+      var player = document.getElementById('audio-player');
+      var analyzeBtn = document.getElementById('analyze-btn');
+
+      if (filenameLabel) filenameLabel.textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+      if (player) player.src = URL.createObjectURL(file);
+      if (previewCard) previewCard.classList.remove('hidden');
+      if (analyzeBtn) analyzeBtn.disabled = false;
+    }
+
+    // Clear Audio Selection
+    function clearSelectedAudio() {
+      currentAudioFile = null;
+      var fileInput = document.getElementById('audio-file-input');
+      if (fileInput) fileInput.value = '';
+      var previewCard = document.getElementById('selected-audio-preview');
+      if (previewCard) previewCard.classList.add('hidden');
+      var player = document.getElementById('audio-player');
+      if (player) player.src = '';
+      var analyzeBtn = document.getElementById('analyze-btn');
+      if (analyzeBtn) analyzeBtn.disabled = true;
+    }
+
+    // Load Demo Sample
+    function loadSample(filename) {
+      fetch('/api/sample-audio/' + filename)
+        .then(function(res) {
+          if (!res.ok) throw new Error('Sample file not found on server');
+          return res.blob();
+        })
+        .then(function(blob) {
+          var file = new File([blob], filename, { type: 'audio/wav' });
+          setAudioFile(file);
+        })
+        .catch(function(err) {
+          alert('Could not load sample audio: ' + err.message);
+        });
+    }
+
+    // Toggle Microphone Recording
+    function toggleRecording() {
+      if (!isRecording) {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          alert('Microphone access is not supported in this browser.');
+          return;
+        }
+
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(function(stream) {
+            startRecordingSession(stream);
+          })
+          .catch(function(err) {
+            alert('Microphone access error: ' + err.message + '\n\nTip: You can also upload any audio file directly in the "Upload Audio" tab!');
+          });
+      } else {
+        stopRecordingSession();
+      }
+    }
+
+    function startRecordingSession(stream) {
+      isRecording = true;
+      currentStream = stream;
+      recordedChunks = [];
+      recordSeconds = 0;
+
+      var recordBtn = document.getElementById('record-btn');
+      var recordText = document.getElementById('record-btn-text');
+      var timerLabel = document.getElementById('recording-timer');
+
+      if (recordBtn) recordBtn.className = 'px-6 py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold flex items-center space-x-2 shadow-lg pulse-record transition cursor-pointer';
+      if (recordText) recordText.textContent = 'Stop Recording';
+      if (timerLabel) timerLabel.textContent = '00:00';
+
+      // Real-Time AudioContext & AudioStreamNode for WebSocket streaming
+      try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        var source = audioContext.createMediaStreamSource(stream);
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 64;
+        source.connect(analyser);
+        drawVisualizer();
+        var placeholder = document.getElementById('canvas-placeholder');
+        if (placeholder) placeholder.classList.add('hidden');
+
+        // Reveal Live Stream Monitor Card
+        var liveCard = document.getElementById('live-stream-card');
+        if (liveCard) liveCard.classList.remove('hidden');
+
+        // Connect WebSocket for Real-time Streaming Detection
+        var protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        var claimedSelect = document.getElementById('claimed-identity-select');
+        var claimedVal = (claimedSelect && claimedSelect.value) ? claimedSelect.value : '';
+        var claimedParam = (claimedVal && claimedVal !== 'auto') ? ('?claimed_identity=' + encodeURIComponent(claimedVal)) : '';
+        var wsUrl = protocol + '//' + window.location.host + '/api/ws/stream' + claimedParam;
+
+        try {
+          liveWebSocket = new WebSocket(wsUrl);
+          liveWebSocket.binaryType = 'arraybuffer';
+
+          liveWebSocket.onmessage = function(event) {
+            try {
+              var msg = JSON.parse(event.data);
+              if (msg.type === 'STREAM_CHUNK_ANALYSIS') {
+                updateLiveStreamThreatGauge(msg);
+              }
+            } catch (err) {
+              console.warn('WS message parse error:', err);
+            }
+          };
+
+          liveWebSocket.onerror = function(err) {
+            console.warn('Live WebSocket error:', err);
+          };
+        } catch (wsErr) {
+          console.warn('Failed to open live WebSocket:', wsErr);
+        }
+
+        // Buffer and downsample to 16kHz for real-time model inference
+        var inputSampleRate = audioContext.sampleRate;
+        var bufferSize = 4096;
+        audioStreamNode = audioContext.createScriptProcessor(bufferSize, 1, 1);
+
+        audioStreamNode.onaudioprocess = function(e) {
+          if (!isRecording || !liveWebSocket || liveWebSocket.readyState !== WebSocket.OPEN) return;
+          var inputChannel = e.inputBuffer.getChannelData(0);
+
+          // Simple linear interpolation downsampling to 16,000Hz
+          var targetRate = 16000;
+          var sampleRatio = inputSampleRate / targetRate;
+          var targetLength = Math.round(inputChannel.length / sampleRatio);
+          var downsampled = new Float32Array(targetLength);
+
+          for (var i = 0; i < targetLength; i++) {
+            var srcIndex = Math.min(inputChannel.length - 1, Math.round(i * sampleRatio));
+            downsampled[i] = inputChannel[srcIndex];
+          }
+
+          liveWebSocket.send(downsampled.buffer);
+        };
+
+        source.connect(audioStreamNode);
+        audioStreamNode.connect(audioContext.destination);
+
+      } catch (e) {
+        console.warn('Audio streaming visualizer / node error:', e);
+      }
+
+      // MediaRecorder for batch recording artifact
+      var options = {};
+      if (typeof MediaRecorder !== 'undefined') {
+        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+          options = { mimeType: 'audio/webm;codecs=opus' };
+        } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+          options = { mimeType: 'audio/ogg;codecs=opus' };
+        }
+      }
+
+      try {
+        mediaRecorder = new MediaRecorder(stream, options);
+      } catch (e) {
+        mediaRecorder = new MediaRecorder(stream);
+      }
+
+      mediaRecorder.ondataavailable = function(e) {
+        if (e.data && e.data.size > 0) {
+          recordedChunks.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = function() {
+        var mime = mediaRecorder.mimeType || 'audio/wav';
+        var ext = mime.includes('webm') ? '.webm' : (mime.includes('ogg') ? '.ogg' : '.wav');
+        var audioBlob = new Blob(recordedChunks, { type: mime });
+        var file = new File([audioBlob], 'mic_recording_' + Date.now() + ext, { type: mime });
+        setAudioFile(file);
+      };
+
+      mediaRecorder.start(250);
+
+      // Start timer
+      if (recordTimerInterval) clearInterval(recordTimerInterval);
+      recordTimerInterval = setInterval(function() {
+        recordSeconds++;
+        var mins = String(Math.floor(recordSeconds / 60)).padStart(2, '0');
+        var secs = String(recordSeconds % 60).padStart(2, '0');
+        if (timerLabel) timerLabel.textContent = mins + ':' + secs;
+      }, 1000);
+    }
+
+    function stopRecordingSession() {
+      isRecording = false;
+
+      if (recordTimerInterval) {
+        clearInterval(recordTimerInterval);
+        recordTimerInterval = null;
+      }
+
+      var recordBtn = document.getElementById('record-btn');
+      var recordText = document.getElementById('record-btn-text');
+      if (recordBtn) recordBtn.className = 'px-6 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold flex items-center space-x-2 shadow-lg shadow-rose-600/30 transition cursor-pointer';
+      if (recordText) recordText.textContent = 'Start Recording';
+
+      if (visualizerAnimationId) {
+        cancelAnimationFrame(visualizerAnimationId);
+        visualizerAnimationId = null;
+      }
+
+      if (audioStreamNode) {
+        try { audioStreamNode.disconnect(); } catch (e) {}
+        audioStreamNode = null;
+      }
+
+      if (liveWebSocket) {
+        try { liveWebSocket.close(); } catch (e) {}
+        liveWebSocket = null;
+      }
+
+      if (audioContext && audioContext.state !== 'closed') {
+        audioContext.close().catch(function() {});
+      }
+
+      var placeholder = document.getElementById('canvas-placeholder');
+      if (placeholder) placeholder.classList.remove('hidden');
+
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+
+      if (currentStream) {
+        currentStream.getTracks().forEach(function(t) { t.stop(); });
+        currentStream = null;
+      }
+    }
+
+    // Live Streaming Threat Gauge UI Updater
+    function updateLiveStreamThreatGauge(data) {
+      var threatPct = Math.round((data.rolling_threat_index || 0) * 100);
+      var gaugeText = document.getElementById('live-gauge-text');
+      var gaugeBar = document.getElementById('live-gauge-bar');
+      var badge = document.getElementById('live-threat-badge');
+      var statusMsg = document.getElementById('live-status-message');
+      var strip = document.getElementById('live-chunks-strip');
+
+      if (gaugeText) gaugeText.textContent = threatPct + '% ' + (data.rolling_risk || 'LOW');
+      if (gaugeBar) {
+        gaugeBar.style.width = Math.max(threatPct, 5) + '%';
+        gaugeBar.className = 'h-2 rounded-full transition-all duration-300 ' +
+          (data.rolling_risk === 'HIGH' ? 'bg-rose-500' : (data.rolling_risk === 'MEDIUM' ? 'bg-amber-500' : 'bg-emerald-500'));
+      }
+
+      if (badge) {
+        if (data.rolling_risk === 'HIGH') {
+          badge.textContent = '🚨 SYNTHETIC ATTACK DETECTED';
+          badge.className = 'px-2.5 py-1 rounded text-[10px] font-mono uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30';
+        } else if (data.rolling_risk === 'MEDIUM') {
+          badge.textContent = '⚠️ ELEVATED ACOUSTIC RISK';
+          badge.className = 'px-2.5 py-1 rounded text-[10px] font-mono uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30';
+        } else {
+          badge.textContent = '🛡️ AUTHENTIC VOICE STREAM';
+          badge.className = 'px-2.5 py-1 rounded text-[10px] font-mono uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+        }
+      }
+
+      if (statusMsg) {
+        if (data.speaker_verdict === 'SYNTHETIC_IMPERSONATION_ATTACK') {
+          statusMsg.innerHTML = '<span class="text-rose-400 font-bold">ALERT:</span> Cloned synthetic voice detected attempting impersonation!';
+        } else if (data.speaker_verdict === 'HUMAN_IMPERSONATOR_ALERT' && data.speaker_verification && data.speaker_verification.status === 'IMPERSONATION_MISMATCH') {
+          statusMsg.innerHTML = '<span class="text-amber-400 font-bold">WARNING:</span> Biometric mismatch against ' + (data.speaker_verification.claimed_name || 'claimed profile') + '.';
+        } else if (data.speaker_verdict === 'AUTHENTIC_EXECUTIVE_CONFIRMED') {
+          statusMsg.innerHTML = '<span class="text-emerald-400 font-bold">VERIFIED:</span> Live profile matches ' + (data.speaker_verification.claimed_name || 'executive') + '.';
+        } else {
+          statusMsg.textContent = 'Active streaming window: ' + (data.threat_status || 'Analyzing audio chunks in real-time...');
+        }
+      }
+
+      if (strip && data.history_window) {
+        strip.innerHTML = data.history_window.map(function(c) {
+          var isFake = (c.prob_fake >= 0.5);
+          return '<div class="px-2 py-1 rounded text-[9px] font-mono ' +
+            (isFake ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30') + '">' +
+            '#' + c.chunk_id + ' ' + Math.round(c.prob_fake * 100) + '%' +
+          '</div>';
+        }).join('');
+      }
+    }
+
+    function drawVisualizer() {
+      var canvas = document.getElementById('mic-canvas');
+      if (!canvas || !analyser) return;
+      var ctx = canvas.getContext('2d');
+      var bufferLength = analyser.frequencyBinCount;
+      var dataArray = new Uint8Array(bufferLength);
+
+      function renderFrame() {
+        if (!isRecording) return;
+        visualizerAnimationId = requestAnimationFrame(renderFrame);
+        analyser.getByteFrequencyData(dataArray);
+
+        ctx.fillStyle = '#0b0f19';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        var barWidth = (canvas.width / bufferLength) * 1.5;
+        var x = 0;
+
+        for (var i = 0; i < bufferLength; i++) {
+          var barHeight = (dataArray[i] / 255) * canvas.height;
+          ctx.fillStyle = 'rgb(99, 102, 241)';
+          ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+          x += barWidth + 2;
+        }
+      }
+      renderFrame();
+    }
+
+    // Run Analysis
+    function runAnalysis() {
+      if (!currentAudioFile) return;
+
+      var analyzeBtn = document.getElementById('analyze-btn');
+      var loadingState = document.getElementById('loading-state');
+      var loadingStepText = document.getElementById('loading-step-text');
+      var loadingBar = document.getElementById('loading-bar');
+      var placeholderState = document.getElementById('placeholder-state');
+      var resultsContainer = document.getElementById('results-container');
+
+      if (analyzeBtn) analyzeBtn.disabled = true;
+      if (loadingState) loadingState.classList.remove('hidden');
+      if (loadingBar) loadingBar.style.width = '30%';
+      if (loadingStepText) loadingStepText.textContent = 'Uploading & preprocessing audio...';
+
+      var formData = new FormData();
+      formData.append('file', currentAudioFile);
+      var claimedSelect = document.getElementById('claimed-identity-select');
+      if (claimedSelect && claimedSelect.value) {
+        formData.append('claimed_identity', claimedSelect.value);
+      }
+      var langSelect = document.getElementById('transcribe-language-select');
+      if (langSelect && langSelect.value) {
+        formData.append('language', langSelect.value);
+      }
+
+      var t1 = setTimeout(function() {
+        if (loadingBar) loadingBar.style.width = '60%';
+        if (loadingStepText) loadingStepText.textContent = 'Detecting synthetic voice clones (Wav2Vec2 + DSP/Prosody)...';
+      }, 1200);
+
+      var t2 = setTimeout(function() {
+        if (loadingBar) loadingBar.style.width = '85%';
+        if (loadingStepText) loadingStepText.textContent = 'Transcribing with Whisper & checking NLP fraud patterns...';
+      }, 2500);
+
+      fetch('/api/analyze', {
+        method: 'POST',
+        body: formData
+      })
+      .then(function(res) {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        if (!res.ok) {
+          return res.json().then(function(errData) {
+            throw new Error(errData.detail || ('Server error: ' + res.statusText));
+          });
+        }
+        return res.json();
+      })
+      .then(function(resJson) {
+        lastAnalysisData = resJson.data;
+        if (loadingBar) loadingBar.style.width = '100%';
+        if (loadingStepText) loadingStepText.textContent = 'Analysis complete!';
+
+        setTimeout(function() {
+          if (loadingState) loadingState.classList.add('hidden');
+          if (placeholderState) placeholderState.classList.add('hidden');
+          if (resultsContainer) resultsContainer.classList.remove('hidden');
+          renderAnalysisResults(lastAnalysisData);
+          if (analyzeBtn) analyzeBtn.disabled = false;
+        }, 500);
+      })
+      .catch(function(err) {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        if (loadingState) loadingState.classList.add('hidden');
+        if (analyzeBtn) analyzeBtn.disabled = false;
+        alert('Analysis Error: ' + err.message);
+      });
+    }
+
+    // Render Analysis Results
+    function renderAnalysisResults(data) {
+      var risk = (data.risk || 'LOW').toUpperCase();
+      var finalScore = parseFloat(data.final_score || 0.0);
+      var riskPercent = (finalScore * 100).toFixed(1);
+
+      var banner = document.getElementById('verdict-banner');
+      var icon = document.getElementById('verdict-icon-container');
+      var title = document.getElementById('verdict-title');
+      var subtitle = document.getElementById('verdict-subtitle');
+      var scoreText = document.getElementById('final-risk-score');
+      var scoreBar = document.getElementById('risk-score-bar');
+      var riskPercentText = document.getElementById('final-risk-percent');
+
+      if (scoreText) scoreText.textContent = riskPercent + '%';
+      if (riskPercentText) riskPercentText.textContent = riskPercent + '% Risk Index';
+      if (scoreBar) scoreBar.style.width = Math.min(Math.max(finalScore * 100, 5), 100) + '%';
+
+      if (banner) {
+        banner.classList.remove('border-emerald-500/30', 'border-amber-500/30', 'border-rose-500/30', 'glow-emerald', 'glow-amber', 'glow-rose');
+      }
+      if (scoreBar) {
+        scoreBar.classList.remove('bg-emerald-500', 'bg-amber-500', 'bg-rose-500');
+      }
+
+      if (risk === 'HIGH') {
+        if (icon) {
+          icon.textContent = '🚨';
+          icon.className = 'w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30';
+        }
+        if (title) {
+          title.textContent = 'HIGH RISK DETECTED';
+          title.className = 'text-2xl font-extrabold tracking-tight text-rose-400';
+        }
+        if (subtitle) subtitle.textContent = 'Strong synthetic AI voice cloning and/or fraud patterns identified in sample.';
+        if (banner) banner.classList.add('border-rose-500/30', 'glow-rose');
+        if (scoreBar) scoreBar.classList.add('bg-rose-500');
+      } else if (risk === 'MEDIUM') {
+        if (icon) {
+          icon.textContent = '⚠️';
+          icon.className = 'w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30';
+        }
+        if (title) {
+          title.textContent = 'MEDIUM RISK';
+          title.className = 'text-2xl font-extrabold tracking-tight text-amber-400';
+        }
+        if (subtitle) subtitle.textContent = 'Moderate synthetic artifacts or suspicious conversational cues observed.';
+        if (banner) banner.classList.add('border-amber-500/30', 'glow-amber');
+        if (scoreBar) scoreBar.classList.add('bg-amber-500');
+      } else {
+        if (icon) {
+          icon.textContent = '🛡️';
+          icon.className = 'w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+        }
+        if (title) {
+          title.textContent = 'LOW RISK (AUTHENTIC)';
+          title.className = 'text-2xl font-extrabold tracking-tight text-emerald-400';
+        }
+        if (subtitle) subtitle.textContent = 'Voice characteristics match natural human acoustics with clean intent.';
+        if (banner) banner.classList.add('border-emerald-500/30', 'glow-emerald');
+        if (scoreBar) scoreBar.classList.add('bg-emerald-500');
+      }
+
+      var probReal = parseFloat(data.prob_real || 0.0);
+      var probFake = parseFloat(data.prob_fake || 0.0);
+      var voiceLabel = (data.voice_label || 'real').toLowerCase();
+
+      var humanText = document.getElementById('human-prob-text');
+      var humanBar = document.getElementById('human-prob-bar');
+      var fakeText = document.getElementById('fake-prob-text');
+      var fakeBar = document.getElementById('fake-prob-bar');
+      var voiceBadge = document.getElementById('voice-label-badge');
+
+      if (humanText) humanText.textContent = (probReal * 100).toFixed(1) + '%';
+      if (humanBar) humanBar.style.width = (probReal * 100) + '%';
+      if (fakeText) fakeText.textContent = (probFake * 100).toFixed(1) + '%';
+      if (fakeBar) fakeBar.style.width = (probFake * 100) + '%';
+
+      if (voiceBadge) {
+        if (voiceLabel === 'fake' || probFake >= 0.5) {
+          voiceBadge.textContent = 'AI CLONE / SYNTHETIC';
+          voiceBadge.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-rose-500/10 text-rose-400 border border-rose-500/20';
+        } else {
+          voiceBadge.textContent = 'HUMAN VOICE';
+          voiceBadge.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+        }
+      }
+
+      var scamProb = parseFloat(data.scam_probability || 0.0);
+      var nonScamProb = parseFloat(data.non_scam_probability || 0.0);
+      var nlpPred = (data.nlp_prediction || 'NON_SCAM').toUpperCase();
+
+      var scamText = document.getElementById('scam-prob-text');
+      var scamBar = document.getElementById('scam-prob-bar');
+      var nonScamText = document.getElementById('non-scam-prob-text');
+      var nonScamBar = document.getElementById('non-scam-prob-bar');
+      var scamBadge = document.getElementById('scam-label-badge');
+
+      if (scamText) scamText.textContent = (scamProb * 100).toFixed(1) + '%';
+      if (scamBar) scamBar.style.width = (scamProb * 100) + '%';
+      if (nonScamText) nonScamText.textContent = (nonScamProb * 100).toFixed(1) + '%';
+      if (nonScamBar) nonScamBar.style.width = (nonScamProb * 100) + '%';
+
+      if (scamBadge) {
+        if (nlpPred === 'SCAM' || scamProb >= 0.5) {
+          scamBadge.textContent = 'SCAM PATTERN DETECTED';
+          scamBadge.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-rose-500/10 text-rose-400 border border-rose-500/20';
+        } else {
+          scamBadge.textContent = 'LEGITIMATE CONTENT';
+          scamBadge.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+        }
+      }
+
+      // Display Fraud Category & Indic Dialect Telemetry
+      var categoryContainer = document.getElementById('fraud-category-badge-container');
+      var categoryText = document.getElementById('fraud-category-text');
+      if (categoryContainer && categoryText) {
+        if (data.fraud_category && data.fraud_category !== 'LEGITIMATE_CONVERSATION') {
+          categoryContainer.classList.remove('hidden');
+          var isIndic = (data.indic_fraud && data.indic_fraud.is_indic_fraud);
+          categoryText.innerHTML = (isIndic ? '🇮🇳 ' : '') + data.fraud_category.replace(/_/g, ' ');
+          categoryText.className = 'font-bold ' + (isIndic ? 'text-amber-400' : 'text-rose-400');
+        } else {
+          categoryContainer.classList.add('hidden');
+        }
+      }
+
+      var transcriptBox = document.getElementById('transcript-box');
+      var rawTranscript = data.transcript || '';
+      if (transcriptBox) {
+        if (rawTranscript.trim()) {
+          var scamKeywords = [
+            'urgent', 'bank', 'account', 'transfer', 'password', 'otp', 'police', 'lottery', 'card', 'pin', 'verify', 'ssn', 'arrest', 'funds', 'wire',
+            'turant', 'paise', 'paisa', 'bhejo', 'batao', 'giraftari', 'jail', 'cbi', 'fir', 'aadhaar', 'khata', 'bijli', 'chalan', 'thana', 'hathkadi', 'cyber',
+            'तुरंत', 'पैसे', 'ट्रांसफर', 'भेज', 'जल्दी', 'खाता', 'बंद', 'बिजली', 'ओटीपी', 'पुलिस', 'गिरफ्तारी', 'जेल'
+          ];
+          var highlighted = rawTranscript;
+          scamKeywords.forEach(function(word) {
+            var regex = new RegExp('\\b(' + word + ')\\b', 'gi');
+            highlighted = highlighted.replace(regex, '<span class="px-1.5 py-0.5 bg-rose-500/20 text-rose-300 font-semibold rounded border border-rose-500/30">$1</span>');
+          });
+          transcriptBox.innerHTML = highlighted;
+        } else {
+          transcriptBox.innerHTML = '<span class="text-slate-500 italic">No audible speech detected by Whisper transcription.</span>';
+        }
+      }
+
+      // 🔬 Populate Forensic Biomechanics & DSP Panel
+      var forensics = data.forensics || {};
+      var jitterEl = document.getElementById('forensic-jitter');
+      var shimmerEl = document.getElementById('forensic-shimmer');
+      var hfEl = document.getElementById('forensic-hf');
+      var rhythmEl = document.getElementById('forensic-rhythm');
+      var flagEl = document.getElementById('forensic-anomaly-flag');
+
+      if (jitterEl) jitterEl.textContent = (forensics.avg_jitter !== undefined) ? forensics.avg_jitter : '--';
+      if (shimmerEl) shimmerEl.textContent = (forensics.avg_shimmer !== undefined) ? forensics.avg_shimmer : '--';
+      if (hfEl) hfEl.textContent = (forensics.avg_hf_energy !== undefined) ? (forensics.avg_hf_energy * 100).toFixed(1) + '%' : '--';
+      if (rhythmEl) rhythmEl.textContent = (forensics.speech_rhythm !== undefined) ? (forensics.speech_rhythm * 100).toFixed(0) + '%' : '--';
+
+      if (flagEl) {
+        if (forensics.unnatural_pitch_flag || (forensics.avg_hf_energy > 0.35)) {
+          flagEl.textContent = '🚨 SYNTHETIC VOCAL ARTIFACTS DETECTED';
+          flagEl.className = 'text-[11px] font-mono px-2.5 py-1 rounded bg-rose-500/20 text-rose-400 border border-rose-500/30';
+        } else {
+          flagEl.textContent = '🛡️ NATURAL HUMAN VOCAL DYNAMICS';
+          flagEl.className = 'text-[11px] font-mono px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+        }
+      }
+
+      var metaDur = document.getElementById('meta-duration');
+      var metaChk = document.getElementById('meta-chunks');
+      if (metaDur) metaDur.textContent = (data.duration_seconds || 0) + 's';
+      if (metaChk) metaChk.textContent = String(data.chunks_analyzed || 0);
+
+      var chunksContainer = document.getElementById('chunks-timeline');
+      if (chunksContainer) {
+        if (data.chunk_predictions && data.chunk_predictions.length > 0) {
+          chunksContainer.innerHTML = data.chunk_predictions.map(function(c) {
+            return '<div class="p-2.5 bg-slate-900 rounded-lg border border-slate-800 text-center">' +
+              '<div class="text-[10px] font-mono text-slate-400">Chunk #' + c.chunk + '</div>' +
+              '<div class="text-xs font-mono font-bold ' + (c.prob_fake > 0.5 ? 'text-rose-400' : 'text-emerald-400') + '">' +
+                (c.prob_fake > 0.5 ? 'AI ' + (c.prob_fake * 100).toFixed(0) + '%' : 'Human ' + (c.prob_real * 100).toFixed(0) + '%') +
+              '</div>' +
+            '</div>';
+          }).join('');
+        } else {
+          chunksContainer.innerHTML = '<div class="col-span-5 text-[11px] text-slate-500">Single segment analysis completed.</div>';
+        }
+      }
+
+      // 👤 Populate Biometric Speaker Verification Card (Dual-Mode Verification)
+      var idCard = document.getElementById('identity-verification-card');
+      var spk = data.speaker_verification;
+      var impVerdict = data.impersonation_verdict;
+
+      if (idCard) {
+        var isVerified = (spk && (spk.is_matched !== undefined ? spk.is_matched : spk.verified));
+        if (spk && (spk.is_matched !== undefined || spk.verified !== undefined)) {
+          idCard.classList.remove('hidden');
+
+          var nameEl = document.getElementById('identity-claimed-name');
+          var roleEl = document.getElementById('identity-role-label');
+          var matchTextEl = document.getElementById('identity-match-text');
+          var matchBarEl = document.getElementById('identity-match-bar');
+          var badgeEl = document.getElementById('identity-verdict-badge');
+          var msgEl = document.getElementById('identity-verdict-message');
+
+          if (nameEl) nameEl.textContent = spk.claimed_name || 'Enrolled Target';
+          if (roleEl) {
+            var srcText = spk.detection_source ? (' • ' + spk.detection_source) : '';
+            roleEl.textContent = (spk.role || 'Executive Profile') + srcText;
+          }
+
+          var matchPct = Math.max(0, Math.min(100, Math.round((spk.match_score || 0) * 100)));
+          if (matchTextEl) matchTextEl.textContent = matchPct + '% match';
+          if (matchBarEl) {
+            matchBarEl.style.width = matchPct + '%';
+            matchBarEl.className = 'h-2 rounded-full transition-all duration-700 ' + (isVerified ? 'bg-emerald-500' : 'bg-rose-500');
+          }
+
+          if (badgeEl && msgEl) {
+            if (impVerdict === 'SYNTHETIC_IMPERSONATION_ATTACK') {
+              badgeEl.textContent = 'SYNTHETIC CLONE ATTACK';
+              badgeEl.className = 'px-2.5 py-1 rounded text-[10px] font-mono uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30';
+              msgEl.innerHTML = '<span class="text-rose-400 font-bold">CRITICAL THREAT:</span> Audio exhibits high synthetic voice cloning artifacts attempting to impersonate ' + (spk.claimed_name || 'executive') + '. Automated transaction blocking recommended!';
+            } else if (impVerdict === 'HUMAN_IMPERSONATOR_ALERT') {
+              badgeEl.textContent = 'IMPERSONATION ALERT';
+              badgeEl.className = 'px-2.5 py-1 rounded text-[10px] font-mono uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30';
+              msgEl.innerHTML = '<span class="text-amber-400 font-bold">BIOMETRIC MISMATCH:</span> Natural voice detected, but vocal tract resonances do NOT match ' + (spk.claimed_name || 'claimed target') + ' (Score: ' + matchPct + '% vs required ' + Math.round((spk.threshold || 0.70)*100) + '%). Possible human social engineering actor!';
+            } else if (impVerdict === 'AUTHENTIC_EXECUTIVE_CONFIRMED') {
+              badgeEl.textContent = 'VERIFIED AUTHENTIC';
+              badgeEl.className = 'px-2.5 py-1 rounded text-[10px] font-mono uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+              msgEl.innerHTML = '<span class="text-emerald-400 font-bold">CONFIRMED:</span> Natural human vocal dynamics matching enrolled biometric voiceprint of ' + (spk.claimed_name || 'executive') + ' (' + matchPct + '% similarity).';
+            } else {
+              badgeEl.textContent = isVerified ? 'MATCH VERIFIED' : 'MISMATCH';
+              badgeEl.className = 'px-2.5 py-1 rounded text-[10px] font-mono uppercase ' + (isVerified ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30');
+              msgEl.textContent = spk.details || 'Biometric analysis completed.';
+            }
+          }
+        } else {
+          idCard.classList.add('hidden');
+        }
+      }
+
+      // 🛡️ Populate Enterprise Automated Banking Defense Card
+      var defCard = document.getElementById('banking-defense-card');
+      var def = data.defense_action;
+      if (defCard && def) {
+        var defTierBadge = document.getElementById('defense-tier-badge');
+        var defBankingGrid = document.getElementById('defense-banking-grid');
+        var defBadge = document.getElementById('defense-status-badge');
+        var defTxn = document.getElementById('defense-txn-id');
+        var defHash = document.getElementById('defense-audit-hash');
+        var defMsg = document.getElementById('defense-action-message');
+        var defContainer = document.getElementById('defense-countermeasures-container');
+        var defList = document.getElementById('defense-countermeasures-list');
+
+        if (defTxn) defTxn.textContent = def.transaction_id || 'TXN-88492041';
+        if (defHash) defHash.textContent = 'SHA256:' + (def.audit_hash || '7FA89E219B');
+
+        // Check if attack is financial coercion
+        var isFinancialAttack = (def.action_status === 'TRANSACTION_HALTED_AND_FROZEN');
+
+        if (defBankingGrid) {
+          if (isFinancialAttack) {
+            defBankingGrid.classList.remove('hidden');
+          } else {
+            defBankingGrid.classList.add('hidden');
+          }
+        }
+
+        if (defTierBadge) {
+          if (isFinancialAttack) {
+            defTierBadge.textContent = 'CORE BANKING CBS / NPCI';
+            defTierBadge.className = 'text-[9px] font-mono px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20';
+          } else if (def.action_status === 'EXECUTIVE_IMPERSONATION_BLOCKED') {
+            defTierBadge.textContent = 'ENTERPRISE IDENTITY 2FA DEFENSE';
+            defTierBadge.className = 'text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20';
+          } else {
+            defTierBadge.textContent = 'ZERO-TRUST ACOUSTIC DEFENSE';
+            defTierBadge.className = 'text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20';
+          }
+        }
+
+        if (def.is_defense_triggered) {
+          defCard.classList.add('border-rose-500/40', 'glow-rose');
+          defCard.classList.remove('border-slate-800', 'border-emerald-500/30', 'glow-emerald');
+
+          if (defBadge) {
+            if (isFinancialAttack) {
+              defBadge.textContent = '🛑 WIRE TRANSFER HALTED';
+            } else if (def.action_status === 'EXECUTIVE_IMPERSONATION_BLOCKED') {
+              defBadge.textContent = '🛑 IDENTITY ACCESS REVOKED';
+            } else {
+              defBadge.textContent = '🛑 SYNTHETIC THREAT CONTAINED';
+            }
+            defBadge.className = 'px-2.5 py-1 rounded text-[10px] font-mono uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30 font-bold';
+          }
+          if (defMsg) {
+            var prefix = isFinancialAttack ? 'CORE BANKING CBS INTERCEPT: ' : (def.action_status === 'EXECUTIVE_IMPERSONATION_BLOCKED' ? 'CORPORATE IDENTITY SHIELD: ' : 'ACOUSTIC THREAT MITIGATION: ');
+            defMsg.innerHTML = '<span class="text-rose-400 font-bold">' + prefix + '</span>' + def.action_summary;
+            defMsg.className = 'text-xs p-3 rounded-xl bg-rose-950/30 border border-rose-500/30 text-rose-200 font-sans leading-relaxed';
+          }
+          if (defContainer && defList && def.countermeasures) {
+            defContainer.classList.remove('hidden');
+            defList.innerHTML = def.countermeasures.map(function(m) {
+              return '<li class="flex items-center space-x-2"><span class="text-rose-400 font-bold">✓</span><span>' + m + '</span></li>';
+            }).join('');
+          }
+        } else {
+          defCard.classList.remove('border-rose-500/40', 'glow-rose');
+          defCard.classList.add('border-emerald-500/20');
+
+          if (defBadge) {
+            defBadge.textContent = '🛡️ DEFENSE STANDBY (CLEARED)';
+            defBadge.className = 'px-2.5 py-1 rounded text-[10px] font-mono uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+          }
+          if (defMsg) {
+            defMsg.innerHTML = '<span class="text-emerald-400 font-bold">CLEARED:</span> ' + def.action_summary;
+            defMsg.className = 'text-xs p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 font-sans leading-relaxed';
+          }
+          if (defContainer) {
+            defContainer.classList.add('hidden');
+          }
+        }
+      }
+    }
+
+    // Copy Transcript
+    function copyTranscript() {
+      var transcriptBox = document.getElementById('transcript-box');
+      if (!transcriptBox) return;
+      var text = transcriptBox.innerText;
+      navigator.clipboard.writeText(text);
+      var btnText = document.getElementById('copy-btn-text');
+      if (btnText) {
+        btnText.textContent = 'Copied!';
+        setTimeout(function() { btnText.textContent = 'Copy'; }, 2000);
+      }
+    }
+
+    // Download Report
+    function downloadReport() {
+      if (!lastAnalysisData) return;
+      var jsonStr = JSON.stringify(lastAnalysisData, null, 2);
+      var blob = new Blob([jsonStr], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'voice_forensics_report_' + Date.now() + '.json';
+      a.click();
+    }
+
+    // =========================================================================
+    // TELEPHONY & MULTI-ENVIRONMENT SOFTPHONE LOGIC
+    // =========================================================================
+    var telephonyScenarios = {};
+    var isCallActive = false;
+    var telephonyWebSocket = null;
+    var telephonyAudioContext = null;
+
+    function initTelephonyControls() {
+      var envSelect = document.getElementById('telephony-env-select');
+      var scenarioSelect = document.getElementById('telephony-scenario-select');
+      var answerBtn = document.getElementById('softphone-answer-btn');
+      var rejectBtn = document.getElementById('softphone-reject-btn');
+      var togglePacketBtn = document.getElementById('toggle-sip-packet-btn');
+      var packetDisplay = document.getElementById('sip-packet-display');
+      var gsmBox = document.getElementById('gsm-carrier-box');
+
+      // Fetch scenarios from backend
+      fetch('/api/telephony/scenarios')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data && data.scenarios) {
+            data.scenarios.forEach(function(sc) {
+              telephonyScenarios[sc.id] = sc;
+            });
+            updateSoftphoneScenario(scenarioSelect.value);
+          }
+        })
+        .catch(function(e) { console.warn('Could not load telephony scenarios:', e); });
+
+      if (scenarioSelect) {
+        scenarioSelect.addEventListener('change', function(e) {
+          updateSoftphoneScenario(e.target.value);
+        });
+      }
+
+      if (envSelect) {
+        envSelect.addEventListener('change', function(e) {
+          var val = e.target.value;
+          var status = document.getElementById('softphone-status');
+          if (gsmBox) {
+            if (val === 'gsm_phone') {
+              gsmBox.classList.remove('hidden');
+              if (status) status.textContent = 'AWAITING GSM PHONE CALL';
+            } else {
+              gsmBox.classList.add('hidden');
+              if (status) status.textContent = 'INCOMING ' + val.toUpperCase() + ' STREAM';
+            }
+          }
+        });
+      }
+
+      if (togglePacketBtn && packetDisplay) {
+        togglePacketBtn.addEventListener('click', function() {
+          if (packetDisplay.classList.contains('hidden')) {
+            packetDisplay.classList.remove('hidden');
+            togglePacketBtn.textContent = 'Hide Headers';
+          } else {
+            packetDisplay.classList.add('hidden');
+            togglePacketBtn.textContent = 'Show Headers';
+          }
+        });
+      }
+
+      if (answerBtn) {
+        answerBtn.addEventListener('click', toggleSoftphoneCall);
+      }
+
+      if (rejectBtn) {
+        rejectBtn.addEventListener('click', function() {
+          endSoftphoneCall();
+          alert('Call Rejected by Defense Operator.');
+        });
+      }
+    }
+
+    function updateSoftphoneScenario(scenarioId) {
+      var sc = telephonyScenarios[scenarioId];
+      if (!sc) return;
+
+      var nameLabel = document.getElementById('softphone-caller-name');
+      var subLabel = document.getElementById('softphone-caller-sub');
+      var extLabel = document.getElementById('softphone-extension');
+      var packetDisplay = document.getElementById('sip-packet-display');
+      var claimedSelect = document.getElementById('claimed-identity-select');
+
+      if (nameLabel) nameLabel.textContent = sc.caller_name + ' (' + sc.caller_title + ')';
+      if (subLabel) subLabel.textContent = 'Ext: ' + sc.extension + ' • Trunk: ' + sc.pbx_trunk;
+      if (extLabel) extLabel.textContent = 'EXT: ' + sc.extension;
+      if (packetDisplay) packetDisplay.textContent = sc.raw_sip;
+
+      // Auto-bind claimed identity in Caller Identity Resolution dropdown
+      if (claimedSelect && sc.claimed_identity) {
+        claimedSelect.value = sc.claimed_identity;
+      }
+    }
+
+    function toggleSoftphoneCall() {
+      if (!isCallActive) {
+        startSoftphoneCall();
+      } else {
+        endSoftphoneCall();
+      }
+    }
+
+    function startSoftphoneCall() {
+      isCallActive = true;
+      var answerBtn = document.getElementById('softphone-answer-btn');
+      var status = document.getElementById('softphone-status');
+      var liveCard = document.getElementById('live-stream-card');
+
+      if (answerBtn) {
+        answerBtn.className = 'flex-1 py-2.5 px-3 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-rose-600/30 transition cursor-pointer pulse-record';
+        answerBtn.innerHTML = '<span>🛑 Terminate Call</span>';
+      }
+      if (status) status.textContent = 'CALL IN PROGRESS (INTERCEPTING)';
+      if (liveCard) liveCard.classList.remove('hidden');
+
+      var scenarioSelect = document.getElementById('telephony-scenario-select');
+      var scId = scenarioSelect ? scenarioSelect.value : 'ceo_impersonation_scam';
+      var sc = telephonyScenarios[scId] || {};
+      var env = (document.getElementById('telephony-env-select') || {}).value || 'sip';
+
+      // Open Telephony Ingress WebSocket
+      var protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      var wsUrl = protocol + '//' + window.location.host + '/api/ws/telephony/stream?env=' + encodeURIComponent(env) +
+                  '&caller_name=' + encodeURIComponent(sc.caller_name || 'Caller') +
+                  '&claimed_identity=' + encodeURIComponent(sc.claimed_identity || 'auto') +
+                  '&codec=float32';
+
+      try {
+        telephonyWebSocket = new WebSocket(wsUrl);
+        telephonyWebSocket.binaryType = 'arraybuffer';
+
+        telephonyWebSocket.onopen = function() {
+          console.log('Telephony WebSocket opened. Starting audio stream for:', sc.sample_audio || 'sample.wav');
+          loadAndStreamScenarioAudio(sc.sample_audio || 'sample.wav');
+        };
+
+        telephonyWebSocket.onmessage = function(event) {
+          try {
+            var msg = JSON.parse(event.data);
+            if (msg.type === 'STREAM_CHUNK_ANALYSIS') {
+              updateLiveStreamThreatGauge(msg);
+            }
+          } catch (e) {
+            console.warn('Telephony WS parse error:', e);
+          }
+        };
+
+        telephonyWebSocket.onerror = function(e) {
+          console.warn('Telephony WebSocket error:', e);
+        };
+      } catch (e) {
+        console.warn('Could not establish Telephony WS:', e);
+      }
+    }
+
+    function loadAndStreamScenarioAudio(sampleFilename) {
+      fetch('/api/sample-audio/' + sampleFilename)
+        .then(function(res) {
+          if (!res.ok) throw new Error('Sample audio not found: ' + sampleFilename);
+          return res.arrayBuffer();
+        })
+        .then(function(arrayBuffer) {
+          telephonyAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+          return telephonyAudioContext.decodeAudioData(arrayBuffer);
+        })
+        .then(function(audioBuffer) {
+          var inputPcm = audioBuffer.getChannelData(0);
+          var inRate = audioBuffer.sampleRate;
+          var targetRate = 16000;
+
+          // Resample to exactly 16,000Hz for the model
+          var pcm;
+          if (inRate !== targetRate) {
+            var ratio = inRate / targetRate;
+            var outLen = Math.round(inputPcm.length / ratio);
+            pcm = new Float32Array(outLen);
+            for (var i = 0; i < outLen; i++) {
+              var idx = Math.min(inputPcm.length - 1, Math.round(i * ratio));
+              pcm[i] = inputPcm[idx];
+            }
+          } else {
+            pcm = inputPcm;
+          }
+
+          var chunkSize = 8000; // 0.5s per packet @ 16kHz
+          var offset = 0;
+
+          function sendNextChunk() {
+            if (!isCallActive || !telephonyWebSocket || telephonyWebSocket.readyState !== WebSocket.OPEN) return;
+            if (offset >= pcm.length) {
+              offset = 0; // Loop audio while call is active
+            }
+
+            var chunk = pcm.slice(offset, offset + chunkSize);
+            offset += chunkSize;
+
+            telephonyWebSocket.send(chunk.buffer);
+            setTimeout(sendNextChunk, 250); // 4 packets/sec
+          }
+
+          sendNextChunk();
+        })
+        .catch(function(err) {
+          console.warn('Error streaming scenario audio:', err);
+        });
+    }
+
+    function endSoftphoneCall() {
+      isCallActive = false;
+      var answerBtn = document.getElementById('softphone-answer-btn');
+      var status = document.getElementById('softphone-status');
+
+      if (answerBtn) {
+        answerBtn.className = 'flex-1 py-2.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-emerald-600/30 transition cursor-pointer';
+        answerBtn.innerHTML = '<span>📞 Accept & Intercept</span>';
+      }
+      if (status) status.textContent = 'CALL DISCONNECTED';
+
+      if (telephonyWebSocket) {
+        try { telephonyWebSocket.close(); } catch(e) {}
+        telephonyWebSocket = null;
+      }
+      if (telephonyAudioContext) {
+        try { telephonyAudioContext.close(); } catch(e) {}
+        telephonyAudioContext = null;
+      }
+    }
+  </script>
+</body>
+</html>

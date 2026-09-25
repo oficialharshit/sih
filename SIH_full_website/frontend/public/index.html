@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>voxguard | AI Voice Deepfake & Scam Detection</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            cyber: {
+              bg: '#0a0d14',
+              card: '#111726',
+              border: '#1e293b',
+              neon: '#00f2fe',
+              emerald: '#10b981',
+              rose: '#f43f5e',
+              amber: '#f59e0b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      background-color: #080b11;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(0, 242, 254, 0.05) 0%, transparent 40%);
+      min-height: 100vh;
+      color: #f1f5f9;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    
+    .glass-card {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    .glow-rose { box-shadow: 0 0 25px rgba(244, 63, 94, 0.25); }
+    .glow-emerald { box-shadow: 0 0 25px rgba(16, 185, 129, 0.25); }
+    .glow-amber { box-shadow: 0 0 25px rgba(245, 158, 11, 0.25); }
+
+    .pulse-record {
+      animation: pulse-red 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse-red {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.6); }
+      50% { box-shadow: 0 0 0 12px rgba(244, 63, 94, 0); }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+<body class="antialiased selection:bg-indigo-500 selection:text-white pb-16">
+
+  <!-- Navigation Bar -->
+  <header class="border-b border-slate-800/80 sticky top-0 z-50 bg-[#080b11]/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20 text-white font-bold">
+          🛡️
+        </div>
+        <div>
+          <span class="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-indigo-200">Vox<span class="text-indigo-400">Guard</span></span>
+          <span class="ml-2 px-2 py-0.5 text-[10px] font-mono uppercase bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded">v2.0 PRO</span>
+        </div>
+      </div>
+
+      <!-- System Telemetry Badge -->
+      <div class="flex items-center space-x-4">
+        <div id="system-status-badge" class="flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="device-info">API Ready</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+
+    <!-- Hero Header -->
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-800/50 text-indigo-300 text-xs font-medium mb-4">
+        <span>⚡ Multimodal AI Voice Cloning & NLP Fraud Detection</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
+        AI Voice Deepfake & <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400">Scam Detection</span>
+      </h1>
+      <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
+        Analyze voice recordings in real-time to detect synthetic speech clones, transcribe conversations via Whisper, and inspect NLP scam patterns with fine-tuned DistilBERT.
+      </p>
+    </div>
+
+    <!-- Main Workspace Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- LEFT COLUMN: Input & Upload Panel (5 cols) -->
+      <div class="lg:col-span-5 space-y-6">
+        <div class="glass-card rounded-2xl p-6 shadow-xl border border-slate-800">
+          
+          <!-- Mode Tabs -->
+          <div class="flex p-1 bg-slate-900 rounded-xl border border-slate-800 mb-6">
+            <button type="button" id="tab-btn-upload" class="flex-1 py-2.5 text-xs font-semibold rounded-lg flex items-center justify-center space-x-2 transition-all bg-indigo-600 text-white shadow cursor-pointer">
+              <span>📁 Upload Audio</span>
+            </button>
+            <button type="button" id="tab-btn-record" class="flex-1 py-2.5 text-xs font-semibold rounded-lg flex items-center justify-center space-x-2 transition-all text-slate-400 hover:text-slate-200 cursor-pointer">
+              <span>🎤 Live Mic</span>
+            </button>
+            <button type="button" id="tab-btn-sample" class="flex-1 py-2.5 text-xs font-semibold rounded-lg flex items-center justify-center space-x-2 transition-all text-slate-400 hover:text-slate-200 cursor-pointer">
+              <span>🎵 Demo Sample</span>
+            </button>
+          </div>
+
+          <!-- TAB 1: File Upload -->
+          <div id="tab-panel-upload" class="space-y-4">
+            <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-xl p-8 text-center cursor-pointer transition-all bg-slate-900/40 hover:bg-slate-900/80">
+              <input type="file" id="audio-file-input" class="hidden" accept="audio/*,.wav,.mp3,.flac,.m4a,.ogg,.webm">
+              <div class="w-14 h-14 mx-auto rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-3 text-2xl">
+                ☁️
+              </div>
+              <p class="text-sm font-medium text-slate-200">Drag & drop your audio file here</p>
+              <p class="text-xs text-slate-400 mt-1">Supports WAV, MP3, FLAC, M4A, OGG, WEBM</p>
+              <button type="button" id="browse-btn" class="mt-4 px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition">
+                Browse Files
+              </button>
+            </div>
+          </div>
+
+          <!-- TAB 2: Live Recording -->
+          <div id="tab-panel-record" class="space-y-4 hidden">
+            <div class="p-6 bg-slate-900/60 rounded-xl border border-slate-800 text-center">
+              
+              <!-- Visualizer Canvas -->
+              <div class="h-24 bg-slate-950 rounded-lg mb-4 flex items-center justify-center border border-slate-800 overflow-hidden relative">
+                <canvas id="mic-canvas" width="400" height="96" class="w-full h-full"></canvas>
+                <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center text-xs text-slate-400 font-mono">
+                  Microphone idle
+                </div>
+              </div>
+
+              <!-- Timer -->
+              <div id="recording-timer" class="text-2xl font-mono font-bold text-slate-300 mb-4">00:00</div>
+
+              <!-- Record Buttons -->
+              <div class="flex justify-center space-x-3">
+                <button type="button" id="record-btn" class="px-6 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold flex items-center space-x-2 shadow-lg shadow-rose-600/30 transition cursor-pointer">
+                  <span>⏺️</span>
+                  <span id="record-btn-text">Start Recording</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: Demo Samples -->
+          <div id="tab-panel-sample" class="space-y-4 hidden">
+            <p class="text-xs text-slate-400">Select a pre-loaded test audio file to test the AI models immediately:</p>
+            <div id="sample-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+              <div id="demo-sample-btn" class="p-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-indigo-500 rounded-lg flex items-center justify-between cursor-pointer transition">
+                <div class="flex items-center space-x-3">
+                  <span class="text-lg">🔊</span>
+                  <div>
+                    <p class="text-xs font-medium text-slate-200">Sample Demo Voice (sample.wav)</p>
+                    <p class="text-[10px] text-slate-400">Voice cloning test clip</p>
+                  </div>
+                </div>
+                <span class="text-xs text-indigo-400 font-mono font-semibold bg-indigo-500/10 px-2 py-1 rounded border border-indigo-500/20">Select</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Audio Preview & Metadata Card -->
+          <div id="selected-audio-preview" class="mt-4 p-4 bg-slate-900 rounded-xl border border-slate-800 hidden space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2 truncate">
+                <span class="text-indigo-400">🔊</span>
+                <span id="preview-filename" class="text-xs font-mono text-slate-200 truncate">audio_file.wav</span>
+              </div>
+              <button type="button" id="clear-audio-btn" class="text-slate-400 hover:text-rose-400 transition font-bold px-2 py-0.5">
+                ✕
+              </button>
+            </div>
+            
+            <audio id="audio-player" controls class="w-full h-9 rounded"></audio>
+          </div>
+
+          <!-- Analyze Action Button -->
+          <div class="pt-2">
+            <button type="button" id="analyze-btn" disabled class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold text-sm flex items-center justify-center space-x-2 shadow-lg shadow-indigo-600/25 transition-all cursor-pointer">
+              <span>🔍</span>
+              <span id="analyze-btn-text">Analyze Voice & Scam Patterns</span>
+            </button>
+          </div>
+
+          <!-- Analysis Loading State -->
+          <div id="loading-state" class="hidden mt-4 p-4 bg-indigo-950/40 border border-indigo-900/50 rounded-xl space-y-3">
+            <div class="flex items-center space-x-3 text-indigo-300 text-xs font-mono">
+              <div class="w-4 h-4 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin"></div>
+              <span id="loading-step-text">Initializing AI models...</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+              <div id="loading-bar" class="bg-indigo-500 h-1.5 rounded-full transition-all duration-300 w-1/4"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Quick Summary Metrics / Instructions Card -->
+        <div class="glass-card rounded-2xl p-5 border border-slate-800 text-xs text-slate-400 space-y-2">
+          <div class="flex items-center space-x-2 text-slate-200 font-semibold mb-1">
+            <span>ℹ️ Inspection Breakdown Formula</span>
+          </div>
+          <p>• <strong>Voice Authenticity (70% weight):</strong> Wav2Vec2 audio feature embeddings detect subtle synthesis artifacts.</p>
+          <p>• <strong>Fraud NLP Pattern (30% weight):</strong> Whisper transcription mapped to DistilBERT scam classification.</p>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Real-time Analysis Results (7 cols) -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- Welcome Placeholder State (Before Analysis) -->
+        <div id="placeholder-state" class="glass-card rounded-2xl p-12 text-center border border-slate-800 shadow-xl space-y-4">
+          <div class="w-16 h-16 mx-auto rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-3xl">
+            🎙️
+          </div>
+          <h3 class="text-lg font-bold text-slate-200">Awaiting Audio Input</h3>
+          <p class="text-xs text-slate-400 max-w-sm mx-auto">
+            Upload an audio sample, record using your microphone, or choose a demo audio clip to generate a complete forensic risk report.
+          </p>
+        </div>
+
+        <!-- RESULTS CONTAINER (Revealed after analysis) -->
+        <div id="results-container" class="hidden space-y-6">
+
+          <!-- 1. Top Verdict Banner -->
+          <div id="verdict-banner" class="glass-card rounded-2xl p-6 border shadow-2xl transition-all">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div class="flex items-center space-x-4">
+                <div id="verdict-icon-container" class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  🛡️
+                </div>
+                <div>
+                  <div class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Overall Diagnostic Verdict</div>
+                  <h2 id="verdict-title" class="text-2xl font-extrabold tracking-tight">LOW RISK</h2>
+                  <p id="verdict-subtitle" class="text-xs text-slate-400 mt-0.5">Voice is classified as authentic human with low scam indicators.</p>
+                </div>
+              </div>
+
+              <!-- Final Risk Score Meter -->
+              <div class="text-right bg-slate-900 px-4 py-2.5 rounded-xl border border-slate-800 min-w-[130px]">
+                <div class="text-[10px] font-mono uppercase text-slate-400">Risk Score</div>
+                <div id="final-risk-score" class="text-2xl font-mono font-extrabold text-indigo-400">0.0%</div>
+              </div>
+            </div>
+
+            <!-- Composite Progress Bar -->
+            <div class="mt-5 space-y-1.5">
+              <div class="flex justify-between text-[11px] font-mono text-slate-400">
+                <span>Composite Threat Index</span>
+                <span id="final-risk-percent">0%</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden p-0.5 border border-slate-800">
+                <div id="risk-score-bar" class="h-1.5 rounded-full transition-all duration-700 bg-emerald-500" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Dual Deepfake vs Scam Metrics Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <!-- Card A: Voice Cloning Authenticity -->
+            <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-slate-200">🎙️ Voice Authenticity</span>
+                </div>
+                <span id="voice-label-badge" class="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  REAL
+                </span>
+              </div>
+
+              <!-- Human Prob -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-400">Human Voice Likelihood</span>
+                  <span id="human-prob-text" class="font-mono font-bold text-emerald-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                  <div id="human-prob-bar" class="h-2 rounded-full bg-emerald-500 transition-all duration-700" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- AI Clone Prob -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-400">AI Synthetic Clone Likelihood</span>
+                  <span id="fake-prob-text" class="font-mono font-bold text-rose-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                  <div id="fake-prob-bar" class="h-2 rounded-full bg-rose-500 transition-all duration-700" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card B: NLP Scam Classification -->
+            <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-slate-200">⚠️ Scam Pattern NLP</span>
+                </div>
+                <span id="scam-label-badge" class="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  NON-SCAM
+                </span>
+              </div>
+
+              <!-- Non-Scam Prob -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-400">Legitimate Conversation</span>
+                  <span id="non-scam-prob-text" class="font-mono font-bold text-emerald-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                  <div id="non-scam-prob-bar" class="h-2 rounded-full bg-emerald-500 transition-all duration-700" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Scam Prob -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-400">Fraud / Scam Probability</span>
+                  <span id="scam-prob-text" class="font-mono font-bold text-amber-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                  <div id="scam-prob-bar" class="h-2 rounded-full bg-amber-500 transition-all duration-700" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 3. Whisper Speech-To-Text Transcript Card -->
+          <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-200">📝 Speech-To-Text Transcript (Whisper)</span>
+              </div>
+              <button type="button" id="copy-transcript-btn" class="text-xs text-slate-400 hover:text-slate-200 flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-900 border border-slate-800 transition">
+                <span id="copy-btn-text">Copy</span>
+              </button>
+            </div>
+            
+            <div id="transcript-box" class="p-4 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-300 font-sans leading-relaxed min-h-[70px] select-text">
+              No speech detected.
+            </div>
+          </div>
+
+          <!-- 4. Forensic Telemetry & Audio Chunk Timeline -->
+          <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-200">Analysis Metadata</span>
+              <div class="flex items-center space-x-3 text-[11px] font-mono text-slate-400">
+                <span>Duration: <strong id="meta-duration" class="text-slate-200">0s</strong></span>
+                <span>Chunks: <strong id="meta-chunks" class="text-slate-200">0</strong></span>
+              </div>
+            </div>
+
+            <!-- Chunk Timeline Visualizer -->
+            <div id="chunks-timeline-container" class="space-y-2">
+              <div class="text-[11px] text-slate-400">Segment Confidence Breakdown (2-Second Windows):</div>
+              <div id="chunks-timeline" class="grid grid-cols-5 gap-2">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Export Actions -->
+          <div class="flex flex-wrap gap-3 justify-end pt-2">
+            <button type="button" id="download-report-btn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center space-x-2 border border-slate-700 transition cursor-pointer">
+              <span>📥 Download JSON Report</span>
+            </button>
+            <button type="button" id="reset-btn" class="px-4 py-2 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 text-xs font-semibold flex items-center space-x-2 border border-indigo-500/30 transition cursor-pointer">
+              <span>🔄 Analyze Another Audio</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Architecture & Model Specifications Section -->
+    <section id="about-section" class="mt-16 pt-12 border-t border-slate-800">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <h2 class="text-xl font-bold text-white">Multi-Stage Forensic AI Architecture</h2>
+        <p class="text-xs text-slate-400 mt-1">Engineered for low latency and high detection accuracy.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-slate-200">1. Audio Preprocessing & VAD</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Resamples input to 16kHz, performs Voice Activity Detection (VAD) to filter background silence, and divides active speech into uniform temporal chunks.
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-slate-200">2. Deepfake Voice Classifier</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Applies a fine-tuned Wav2Vec2 transformer to inspect raw acoustic spectrograms for unnatural phase artifacts common in synthetic speech synthesis.
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-slate-200">3. Whisper & DistilBERT NLP</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Transcribes spoken audio with Whisper-Small and passes lexical content into a custom DistilBERT classifier trained on social engineering and financial scam prompts.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Complete, Standalone, Self-Contained JavaScript Logic -->
+  <script>
+    // Global State
+    var currentAudioFile = null;
+    var isRecording = false;
+    var mediaRecorder = null;
+    var recordedChunks = [];
+    var recordTimerInterval = null;
+    var recordSeconds = 0;
+    var audioContext = null;
+    var analyser = null;
+    var visualizerAnimationId = null;
+    var currentStream = null;
+    var lastAnalysisData = null;
+
+    // DOM Ready Initializer
+    window.addEventListener('DOMContentLoaded', function() {
+      console.log('voxguard Frontend initialized.');
+      initEventListeners();
+      checkApiHealth();
+    });
+
+    function initEventListeners() {
+      // 1. Tab buttons
+      var tabUpload = document.getElementById('tab-btn-upload');
+      var tabRecord = document.getElementById('tab-btn-record');
+      var tabSample = document.getElementById('tab-btn-sample');
+
+      if (tabUpload) tabUpload.addEventListener('click', function() { switchTab('upload'); });
+      if (tabRecord) tabRecord.addEventListener('click', function() { switchTab('record'); });
+      if (tabSample) tabSample.addEventListener('click', function() { switchTab('sample'); });
+
+      // 2. Drop Zone & Browse
+      var dropZone = document.getElementById('drop-zone');
+      var fileInput = document.getElementById('audio-file-input');
+      var browseBtn = document.getElementById('browse-btn');
+
+      if (dropZone) {
+        dropZone.addEventListener('click', function() { if (fileInput) fileInput.click(); });
+      }
+      if (browseBtn) {
+        browseBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (fileInput) fileInput.click();
+        });
+      }
+      if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+          if (e.target.files && e.target.files.length > 0) {
+            setAudioFile(e.target.files[0]);
+          }
+        });
+      }
+
+      // Drag and drop events
+      if (dropZone) {
+        ['dragenter', 'dragover'].forEach(function(evt) {
+          dropZone.addEventListener(evt, function(e) {
+            e.preventDefault();
+            dropZone.classList.add('border-indigo-500', 'bg-indigo-950/20');
+          });
+        });
+        ['dragleave', 'drop'].forEach(function(evt) {
+          dropZone.addEventListener(evt, function(e) {
+            e.preventDefault();
+            dropZone.classList.remove('border-indigo-500', 'bg-indigo-950/20');
+          });
+        });
+        dropZone.addEventListener('drop', function(e) {
+          if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+            setAudioFile(e.dataTransfer.files[0]);
+          }
+        });
+      }
+
+      // 3. Demo Sample Button
+      var demoSampleBtn = document.getElementById('demo-sample-btn');
+      if (demoSampleBtn) {
+        demoSampleBtn.addEventListener('click', function() {
+          loadSample('sample.wav');
+        });
+      }
+
+      // 4. Record Button
+      var recordBtn = document.getElementById('record-btn');
+      if (recordBtn) {
+        recordBtn.addEventListener('click', toggleRecording);
+      }
+
+      // 5. Analyze Button
+      var analyzeBtn = document.getElementById('analyze-btn');
+      if (analyzeBtn) {
+        analyzeBtn.addEventListener('click', runAnalysis);
+      }
+
+      // 6. Clear / Reset Buttons
+      var clearBtn = document.getElementById('clear-audio-btn');
+      if (clearBtn) clearBtn.addEventListener('click', clearSelectedAudio);
+
+      var resetBtn = document.getElementById('reset-btn');
+      if (resetBtn) resetBtn.addEventListener('click', clearSelectedAudio);
+
+      // 7. Copy & Download Buttons
+      var copyBtn = document.getElementById('copy-transcript-btn');
+      if (copyBtn) copyBtn.addEventListener('click', copyTranscript);
+
+      var downloadBtn = document.getElementById('download-report-btn');
+      if (downloadBtn) downloadBtn.addEventListener('click', downloadReport);
+    }
+
+    // Health Check
+    function checkApiHealth() {
+      var badge = document.getElementById('device-info');
+      fetch('/api/health')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (badge) badge.textContent = data.device.toUpperCase() + ' (' + data.gpu_name + ')';
+        })
+        .catch(function() {
+          if (badge) {
+            badge.textContent = 'Server Connected';
+          }
+        });
+    }
+
+    // Switch Tabs
+    function switchTab(tab) {
+      var tabs = ['upload', 'record', 'sample'];
+      tabs.forEach(function(t) {
+        var btn = document.getElementById('tab-btn-' + t);
+        var panel = document.getElementById('tab-panel-' + t);
+        if (t === tab) {
+          if (btn) btn.className = 'flex-1 py-2.5 text-xs font-semibold rounded-lg flex items-center justify-center space-x-2 transition-all bg-indigo-600 text-white shadow cursor-pointer';
+          if (panel) panel.classList.remove('hidden');
+        } else {
+          if (btn) btn.className = 'flex-1 py-2.5 text-xs font-semibold rounded-lg flex items-center justify-center space-x-2 transition-all text-slate-400 hover:text-slate-200 cursor-pointer';
+          if (panel) panel.classList.add('hidden');
+        }
+      });
+    }
+
+    // Set Audio File
+    function setAudioFile(file) {
+      currentAudioFile = file;
+      var previewCard = document.getElementById('selected-audio-preview');
+      var filenameLabel = document.getElementById('preview-filename');
+      var player = document.getElementById('audio-player');
+      var analyzeBtn = document.getElementById('analyze-btn');
+
+      if (filenameLabel) filenameLabel.textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+      if (player) player.src = URL.createObjectURL(file);
+      if (previewCard) previewCard.classList.remove('hidden');
+      if (analyzeBtn) analyzeBtn.disabled = false;
+    }
+
+    // Clear Audio Selection
+    function clearSelectedAudio() {
+      currentAudioFile = null;
+      var fileInput = document.getElementById('audio-file-input');
+      if (fileInput) fileInput.value = '';
+      var previewCard = document.getElementById('selected-audio-preview');
+      if (previewCard) previewCard.classList.add('hidden');
+      var player = document.getElementById('audio-player');
+      if (player) player.src = '';
+      var analyzeBtn = document.getElementById('analyze-btn');
+      if (analyzeBtn) analyzeBtn.disabled = true;
+    }
+
+    // Load Demo Sample
+    function loadSample(filename) {
+      fetch('/api/sample-audio/' + filename)
+        .then(function(res) {
+          if (!res.ok) throw new Error('Sample file not found on server');
+          return res.blob();
+        })
+        .then(function(blob) {
+          var file = new File([blob], filename, { type: 'audio/wav' });
+          setAudioFile(file);
+        })
+        .catch(function(err) {
+          alert('Could not load sample audio: ' + err.message);
+        });
+    }
+
+    // Toggle Microphone Recording
+    function toggleRecording() {
+      if (!isRecording) {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          alert('Microphone access is not supported in this browser.');
+          return;
+        }
+
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(function(stream) {
+            startRecordingSession(stream);
+          })
+          .catch(function(err) {
+            alert('Microphone access error: ' + err.message + '\n\nTip: You can also upload any audio file directly in the "Upload Audio" tab!');
+          });
+      } else {
+        stopRecordingSession();
+      }
+    }
+
+    function startRecordingSession(stream) {
+      isRecording = true;
+      currentStream = stream;
+      recordedChunks = [];
+      recordSeconds = 0;
+
+      var recordBtn = document.getElementById('record-btn');
+      var recordText = document.getElementById('record-btn-text');
+      var timerLabel = document.getElementById('recording-timer');
+
+      if (recordBtn) recordBtn.className = 'px-6 py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold flex items-center space-x-2 shadow-lg pulse-record transition cursor-pointer';
+      if (recordText) recordText.textContent = 'Stop Recording';
+      if (timerLabel) timerLabel.textContent = '00:00';
+
+      // Visualizer
+      try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        var source = audioContext.createMediaStreamSource(stream);
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 64;
+        source.connect(analyser);
+        drawVisualizer();
+        var placeholder = document.getElementById('canvas-placeholder');
+        if (placeholder) placeholder.classList.add('hidden');
+      } catch (e) {
+        console.warn('Audio visualizer:', e);
+      }
+
+      // MediaRecorder
+      var options = {};
+      if (typeof MediaRecorder !== 'undefined') {
+        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+          options = { mimeType: 'audio/webm;codecs=opus' };
+        } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+          options = { mimeType: 'audio/ogg;codecs=opus' };
+        }
+      }
+
+      try {
+        mediaRecorder = new MediaRecorder(stream, options);
+      } catch (e) {
+        mediaRecorder = new MediaRecorder(stream);
+      }
+
+      mediaRecorder.ondataavailable = function(e) {
+        if (e.data && e.data.size > 0) {
+          recordedChunks.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = function() {
+        var mime = mediaRecorder.mimeType || 'audio/wav';
+        var ext = mime.includes('webm') ? '.webm' : (mime.includes('ogg') ? '.ogg' : '.wav');
+        var audioBlob = new Blob(recordedChunks, { type: mime });
+        var file = new File([audioBlob], 'mic_recording_' + Date.now() + ext, { type: mime });
+        setAudioFile(file);
+      };
+
+      mediaRecorder.start(250);
+
+      // Start timer
+      if (recordTimerInterval) clearInterval(recordTimerInterval);
+      recordTimerInterval = setInterval(function() {
+        recordSeconds++;
+        var mins = String(Math.floor(recordSeconds / 60)).padStart(2, '0');
+        var secs = String(recordSeconds % 60).padStart(2, '0');
+        if (timerLabel) timerLabel.textContent = mins + ':' + secs;
+      }, 1000);
+    }
+
+    function stopRecordingSession() {
+      isRecording = false;
+
+      if (recordTimerInterval) {
+        clearInterval(recordTimerInterval);
+        recordTimerInterval = null;
+      }
+
+      var recordBtn = document.getElementById('record-btn');
+      var recordText = document.getElementById('record-btn-text');
+      if (recordBtn) recordBtn.className = 'px-6 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold flex items-center space-x-2 shadow-lg shadow-rose-600/30 transition cursor-pointer';
+      if (recordText) recordText.textContent = 'Start Recording';
+
+      if (visualizerAnimationId) {
+        cancelAnimationFrame(visualizerAnimationId);
+        visualizerAnimationId = null;
+      }
+      if (audioContext && audioContext.state !== 'closed') {
+        audioContext.close().catch(function() {});
+      }
+
+      var placeholder = document.getElementById('canvas-placeholder');
+      if (placeholder) placeholder.classList.remove('hidden');
+
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+
+      if (currentStream) {
+        currentStream.getTracks().forEach(function(t) { t.stop(); });
+        currentStream = null;
+      }
+    }
+
+    function drawVisualizer() {
+      var canvas = document.getElementById('mic-canvas');
+      if (!canvas || !analyser) return;
+      var ctx = canvas.getContext('2d');
+      var bufferLength = analyser.frequencyBinCount;
+      var dataArray = new Uint8Array(bufferLength);
+
+      function renderFrame() {
+        if (!isRecording) return;
+        visualizerAnimationId = requestAnimationFrame(renderFrame);
+        analyser.getByteFrequencyData(dataArray);
+
+        ctx.fillStyle = '#0b0f19';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        var barWidth = (canvas.width / bufferLength) * 1.5;
+        var x = 0;
+
+        for (var i = 0; i < bufferLength; i++) {
+          var barHeight = (dataArray[i] / 255) * canvas.height;
+          ctx.fillStyle = 'rgb(99, 102, 241)';
+          ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+          x += barWidth + 2;
+        }
+      }
+      renderFrame();
+    }
+
+    // Run Analysis
+    function runAnalysis() {
+      if (!currentAudioFile) return;
+
+      var analyzeBtn = document.getElementById('analyze-btn');
+      var loadingState = document.getElementById('loading-state');
+      var loadingStepText = document.getElementById('loading-step-text');
+      var loadingBar = document.getElementById('loading-bar');
+      var placeholderState = document.getElementById('placeholder-state');
+      var resultsContainer = document.getElementById('results-container');
+
+      if (analyzeBtn) analyzeBtn.disabled = true;
+      if (loadingState) loadingState.classList.remove('hidden');
+      if (loadingBar) loadingBar.style.width = '30%';
+      if (loadingStepText) loadingStepText.textContent = 'Uploading & preprocessing audio...';
+
+      var formData = new FormData();
+      formData.append('file', currentAudioFile);
+
+      var t1 = setTimeout(function() {
+        if (loadingBar) loadingBar.style.width = '60%';
+        if (loadingStepText) loadingStepText.textContent = 'Detecting synthetic voice clones (Wav2Vec2)...';
+      }, 1200);
+
+      var t2 = setTimeout(function() {
+        if (loadingBar) loadingBar.style.width = '85%';
+        if (loadingStepText) loadingStepText.textContent = 'Transcribing with Whisper & checking NLP fraud patterns...';
+      }, 2500);
+
+      fetch('/api/analyze', {
+        method: 'POST',
+        body: formData
+      })
+      .then(function(res) {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        if (!res.ok) {
+          return res.json().then(function(errData) {
+            throw new Error(errData.detail || ('Server error: ' + res.statusText));
+          });
+        }
+        return res.json();
+      })
+      .then(function(resJson) {
+        lastAnalysisData = resJson.data;
+        if (loadingBar) loadingBar.style.width = '100%';
+        if (loadingStepText) loadingStepText.textContent = 'Analysis complete!';
+
+        setTimeout(function() {
+          if (loadingState) loadingState.classList.add('hidden');
+          if (placeholderState) placeholderState.classList.add('hidden');
+          if (resultsContainer) resultsContainer.classList.remove('hidden');
+          renderAnalysisResults(lastAnalysisData);
+          if (analyzeBtn) analyzeBtn.disabled = false;
+        }, 500);
+      })
+      .catch(function(err) {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        if (loadingState) loadingState.classList.add('hidden');
+        if (analyzeBtn) analyzeBtn.disabled = false;
+        alert('Analysis Error: ' + err.message);
+      });
+    }
+
+    // Render Analysis Results
+    function renderAnalysisResults(data) {
+      var risk = (data.risk || 'LOW').toUpperCase();
+      var finalScore = parseFloat(data.final_score || 0.0);
+      var riskPercent = (finalScore * 100).toFixed(1);
+
+      var banner = document.getElementById('verdict-banner');
+      var icon = document.getElementById('verdict-icon-container');
+      var title = document.getElementById('verdict-title');
+      var subtitle = document.getElementById('verdict-subtitle');
+      var scoreText = document.getElementById('final-risk-score');
+      var scoreBar = document.getElementById('risk-score-bar');
+      var riskPercentText = document.getElementById('final-risk-percent');
+
+      if (scoreText) scoreText.textContent = riskPercent + '%';
+      if (riskPercentText) riskPercentText.textContent = riskPercent + '% Risk Index';
+      if (scoreBar) scoreBar.style.width = Math.min(Math.max(finalScore * 100, 5), 100) + '%';
+
+      if (banner) {
+        banner.classList.remove('border-emerald-500/30', 'border-amber-500/30', 'border-rose-500/30', 'glow-emerald', 'glow-amber', 'glow-rose');
+      }
+      if (scoreBar) {
+        scoreBar.classList.remove('bg-emerald-500', 'bg-amber-500', 'bg-rose-500');
+      }
+
+      if (risk === 'HIGH') {
+        if (icon) {
+          icon.textContent = '🚨';
+          icon.className = 'w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30';
+        }
+        if (title) {
+          title.textContent = 'HIGH RISK DETECTED';
+          title.className = 'text-2xl font-extrabold tracking-tight text-rose-400';
+        }
+        if (subtitle) subtitle.textContent = 'Strong synthetic AI voice cloning and/or fraud patterns identified in sample.';
+        if (banner) banner.classList.add('border-rose-500/30', 'glow-rose');
+        if (scoreBar) scoreBar.classList.add('bg-rose-500');
+      } else if (risk === 'MEDIUM') {
+        if (icon) {
+          icon.textContent = '⚠️';
+          icon.className = 'w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30';
+        }
+        if (title) {
+          title.textContent = 'MEDIUM RISK';
+          title.className = 'text-2xl font-extrabold tracking-tight text-amber-400';
+        }
+        if (subtitle) subtitle.textContent = 'Moderate synthetic artifacts or suspicious conversational cues observed.';
+        if (banner) banner.classList.add('border-amber-500/30', 'glow-amber');
+        if (scoreBar) scoreBar.classList.add('bg-amber-500');
+      } else {
+        if (icon) {
+          icon.textContent = '🛡️';
+          icon.className = 'w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+        }
+        if (title) {
+          title.textContent = 'LOW RISK (AUTHENTIC)';
+          title.className = 'text-2xl font-extrabold tracking-tight text-emerald-400';
+        }
+        if (subtitle) subtitle.textContent = 'Voice characteristics match natural human acoustics with clean intent.';
+        if (banner) banner.classList.add('border-emerald-500/30', 'glow-emerald');
+        if (scoreBar) scoreBar.classList.add('bg-emerald-500');
+      }
+
+      var probReal = parseFloat(data.prob_real || 0.0);
+      var probFake = parseFloat(data.prob_fake || 0.0);
+      var voiceLabel = (data.voice_label || 'real').toLowerCase();
+
+      var humanText = document.getElementById('human-prob-text');
+      var humanBar = document.getElementById('human-prob-bar');
+      var fakeText = document.getElementById('fake-prob-text');
+      var fakeBar = document.getElementById('fake-prob-bar');
+      var voiceBadge = document.getElementById('voice-label-badge');
+
+      if (humanText) humanText.textContent = (probReal * 100).toFixed(1) + '%';
+      if (humanBar) humanBar.style.width = (probReal * 100) + '%';
+      if (fakeText) fakeText.textContent = (probFake * 100).toFixed(1) + '%';
+      if (fakeBar) fakeBar.style.width = (probFake * 100) + '%';
+
+      if (voiceBadge) {
+        if (voiceLabel === 'fake' || probFake >= 0.5) {
+          voiceBadge.textContent = 'AI CLONE / SYNTHETIC';
+          voiceBadge.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-rose-500/10 text-rose-400 border border-rose-500/20';
+        } else {
+          voiceBadge.textContent = 'HUMAN VOICE';
+          voiceBadge.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+        }
+      }
+
+      var scamProb = parseFloat(data.scam_probability || 0.0);
+      var nonScamProb = parseFloat(data.non_scam_probability || 0.0);
+      var nlpPred = (data.nlp_prediction || 'NON_SCAM').toUpperCase();
+
+      var scamText = document.getElementById('scam-prob-text');
+      var scamBar = document.getElementById('scam-prob-bar');
+      var nonScamText = document.getElementById('non-scam-prob-text');
+      var nonScamBar = document.getElementById('non-scam-prob-bar');
+      var scamBadge = document.getElementById('scam-label-badge');
+
+      if (scamText) scamText.textContent = (scamProb * 100).toFixed(1) + '%';
+      if (scamBar) scamBar.style.width = (scamProb * 100) + '%';
+      if (nonScamText) nonScamText.textContent = (nonScamProb * 100).toFixed(1) + '%';
+      if (nonScamBar) nonScamBar.style.width = (nonScamProb * 100) + '%';
+
+      if (scamBadge) {
+        if (nlpPred === 'SCAM' || scamProb >= 0.5) {
+          scamBadge.textContent = 'SCAM PATTERN DETECTED';
+          scamBadge.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-rose-500/10 text-rose-400 border border-rose-500/20';
+        } else {
+          scamBadge.textContent = 'LEGITIMATE CONTENT';
+          scamBadge.className = 'px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+        }
+      }
+
+      var transcriptBox = document.getElementById('transcript-box');
+      var rawTranscript = data.transcript || '';
+      if (transcriptBox) {
+        if (rawTranscript.trim()) {
+          var scamKeywords = ['urgent', 'bank', 'account', 'transfer', 'password', 'otp', 'police', 'lottery', 'card', 'pin', 'verify', 'ssn', 'arrest', 'funds', 'wire'];
+          var highlighted = rawTranscript;
+          scamKeywords.forEach(function(word) {
+            var regex = new RegExp('\\b(' + word + ')\\b', 'gi');
+            highlighted = highlighted.replace(regex, '<span class="px-1.5 py-0.5 bg-rose-500/20 text-rose-300 font-semibold rounded border border-rose-500/30">$1</span>');
+          });
+          transcriptBox.innerHTML = highlighted;
+        } else {
+          transcriptBox.innerHTML = '<span class="text-slate-500 italic">No audible speech detected by Whisper transcription.</span>';
+        }
+      }
+
+      var metaDur = document.getElementById('meta-duration');
+      var metaChk = document.getElementById('meta-chunks');
+      if (metaDur) metaDur.textContent = (data.duration_seconds || 0) + 's';
+      if (metaChk) metaChk.textContent = String(data.chunks_analyzed || 0);
+
+      var chunksContainer = document.getElementById('chunks-timeline');
+      if (chunksContainer) {
+        if (data.chunk_predictions && data.chunk_predictions.length > 0) {
+          chunksContainer.innerHTML = data.chunk_predictions.map(function(c) {
+            return '<div class="p-2.5 bg-slate-900 rounded-lg border border-slate-800 text-center">' +
+              '<div class="text-[10px] font-mono text-slate-400">Chunk #' + c.chunk + '</div>' +
+              '<div class="text-xs font-mono font-bold ' + (c.prob_fake > 0.5 ? 'text-rose-400' : 'text-emerald-400') + '">' +
+                (c.prob_fake > 0.5 ? 'AI ' + (c.prob_fake * 100).toFixed(0) + '%' : 'Human ' + (c.prob_real * 100).toFixed(0) + '%') +
+              '</div>' +
+            '</div>';
+          }).join('');
+        } else {
+          chunksContainer.innerHTML = '<div class="col-span-5 text-[11px] text-slate-500">Single segment analysis completed.</div>';
+        }
+      }
+    }
+
+    // Copy Transcript
+    function copyTranscript() {
+      var transcriptBox = document.getElementById('transcript-box');
+      if (!transcriptBox) return;
+      var text = transcriptBox.innerText;
+      navigator.clipboard.writeText(text);
+      var btnText = document.getElementById('copy-btn-text');
+      if (btnText) {
+        btnText.textContent = 'Copied!';
+        setTimeout(function() { btnText.textContent = 'Copy'; }, 2000);
+      }
+    }
+
+    // Download Report
+    function downloadReport() {
+      if (!lastAnalysisData) return;
+      var jsonStr = JSON.stringify(lastAnalysisData, null, 2);
+      var blob = new Blob([jsonStr], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'voice_forensics_report_' + Date.now() + '.json';
+      a.click();
+    }
+  </script>
+</body>
+</html>
